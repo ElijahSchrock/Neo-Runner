@@ -9,6 +9,8 @@ export class Game {
     constructor(scene, camera){
         //init variables
         this.speedZ = 20;
+        this.speedX = 0; //0 = straight, -1 = left, 1 = right
+        this.translateX = 0;
         //prepare 3D scene
         this.initScene(scene, camera);
 
@@ -16,11 +18,88 @@ export class Game {
         document.addEventListener('keydown', this.keyDown.bind(this));
         document.addEventListener('keyup', this.keyUp.bind(this));
     }
-    
+
+    createGrid(scene) {
+        
+        let divisions = 30;
+        let gridLimit = 200;
+        this.grid = new THREE.GridHelper(gridLimit * 2, divisions, 0xccddee, 0xccddee);
+
+        const moveableX = [];
+        const moveableZ = [];
+        for (let i = 0; i <= divisions; i++) {
+        moveableX.push(0, 0, 1, 1);
+        moveableZ.push(1, 1, 0, 0); // move horizontal lines only (1 - point is moveable)
+        }
+        this.grid.geometry.setAttribute('moveableX', new THREE.BufferAttribute(new Uint8Array(moveableX), 1));
+        this.grid.geometry.setAttribute('moveableZ', new THREE.BufferAttribute(new Uint8Array(moveableZ), 1));
+
+        this.grid.material = new THREE.ShaderMaterial({
+        uniforms: {
+            speedZ: {
+                value: this.speedZ
+            },
+            translateX: {
+                value: this.translateX
+            },
+            gridLimits: {
+                value: new THREE.Vector2(-gridLimit, gridLimit)
+            },
+            time: {
+                value: 0
+            }
+        },
+        vertexShader: `
+            uniform float time;
+            uniform vec2 gridLimits;
+            uniform float speedZ;
+            uniform float translateX;
+            
+            attribute float moveableZ;
+            attribute float moveableX;
+            
+            varying vec3 vColor;
+        
+            void main() {
+            vColor = color;
+            float limLen = gridLimits.y - gridLimits.x;
+            vec3 pos = position;
+            if (floor(moveableX + 0.5) > 0.5) {
+                float xDist = translateX;
+                float curXPos = mod((pos.x + xDist) - gridLimits.x, limLen) + gridLimits.x;
+                pos.x = curXPos;
+            }
+            if (floor(moveableZ + 0.5) > 0.5) {
+                float zDist = speedZ * time;
+                float curZPos = mod((pos.z + zDist) - gridLimits.x, limLen) + gridLimits.x;
+                pos.z = curZPos;
+            }
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+            }
+        `,
+        fragmentShader: `
+            varying vec3 vColor;
+        
+            void main() {
+            gl_FragColor = vec4(vColor, 1.);
+            }
+        `,
+        vertexColors: THREE.VertexColors
+        });
+
+        scene.add(this.grid);
+
+        this.time = 0;
+        this.clock = new THREE.Clock();
+    }
+
     updateGrid() {
         //will update the grid to move backwards to seem like were moving forward in the world
         this.grid.material.uniforms.time.value = this.time;
         this.objectsParent.position.z = this.speedZ * this.time;
+
+        this.grid.material.uniforms.translateX.value = this.translateX;
+        this.objectsParent.position.x = this.translateX;
 
         this.objectsParent.traverse((child) => {
             if(child instanceof THREE.Mesh) {
@@ -47,6 +126,8 @@ export class Game {
         //updating the game state
         this.time += this.clock.getDelta(); //increments time variable 
 
+        this.translateX += this.speedX * -0.5;
+
         this.updateGrid();
         this.checkCollisions();
         this.updateUserUI();
@@ -54,10 +135,23 @@ export class Game {
 
     keyDown(event) {
         //move object by checking key press
+        let newSpeedX;
+        switch (event.key) {
+            case 'ArrowLeft':
+                newSpeedX = -1
+                break;
+            case 'ArrowRight':
+                newSpeedX = 1
+                break;
+            default:
+                return;
+        }
+        this.speedX = newSpeedX;
     }
 
     keyUp() {
         //reset object to idle 
+        this.speedX = 0;
     }
 
     checkCollisions(){
@@ -148,9 +242,9 @@ export class Game {
     setupObstacle(obj, refXpos = 0, refZpos = 0) {
         //random scale
         obj.scale.set(
-            this.randomFloat(0.5, 2),
-            this.randomFloat(0.5, 2),
-            this.randomFloat(0.5, 2)
+            this.randomFloat(2, 3),
+            this.randomFloat(2, 3),
+            this.randomFloat(2, 3)
         );
         //random positioning
         obj.position.set(
@@ -194,67 +288,6 @@ export class Game {
             refZpos - 100 - this.randomFloat(0, 100)
         );
 
-    }
-
-    createGrid(scene) {
-        
-        let divisions = 30;
-        let gridLimit = 200;
-        this.grid = new THREE.GridHelper(gridLimit * 2, divisions, 0xccddee, 0xccddee);
-
-        const moveableZ = [];
-        for (let i = 0; i <= divisions; i++) {
-        moveableZ.push(1, 1, 0, 0); // move horizontal lines only (1 - point is moveable)
-        }
-        this.grid.geometry.setAttribute('moveableZ', new THREE.BufferAttribute(new Uint8Array(moveableZ), 1));
-
-        this.grid.material = new THREE.ShaderMaterial({
-        uniforms: {
-            speedZ: {
-                value: this.speedZ
-            },
-            gridLimits: {
-                value: new THREE.Vector2(-gridLimit, gridLimit)
-            },
-            time: {
-                value: 0
-            }
-        },
-        vertexShader: `
-            uniform float time;
-            uniform vec2 gridLimits;
-            uniform float speedZ;
-            
-            attribute float moveableZ;
-            
-            varying vec3 vColor;
-        
-            void main() {
-            vColor = color;
-            float limLen = gridLimits.y - gridLimits.x;
-            vec3 pos = position;
-            if (floor(moveableZ + 0.5) > 0.5) {
-                float zDist = speedZ * time;
-                float curZPos = mod((pos.z + zDist) - gridLimits.x, limLen) + gridLimits.x;
-                pos.z = curZPos;
-            }
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-            }
-        `,
-        fragmentShader: `
-            varying vec3 vColor;
-        
-            void main() {
-            gl_FragColor = vec4(vColor, 1.);
-            }
-        `,
-        vertexColors: THREE.VertexColors
-        });
-
-        scene.add(this.grid);
-
-        this.time = 0;
-        this.clock = new THREE.Clock();
     }
 
     initScene(scene, camera) {
