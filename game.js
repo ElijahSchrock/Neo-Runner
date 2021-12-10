@@ -38,6 +38,7 @@ export class Game {
     updateGrid() {
         //will update the grid to move backwards to seem like were moving forward in the world
         this.grid.material.uniforms.time.value = this.time;
+        this.objectsParent.position.z = this.speedZ * this.time;
     }
 
     checkCollisions(){
@@ -63,7 +64,7 @@ export class Game {
         //use this fucntion to load in model of runner
         const shipBody = new THREE.Mesh(
             new THREE.TetrahedronBufferGeometry(0.4),
-            new THREE.MeshBasicMaterial({color: 0xbbccdd}),
+            new THREE.MeshBasicMaterial({color: 0x32CD32}),
         );
 
         shipBody.rotateX(45 * Math.PI / 180);
@@ -119,6 +120,8 @@ export class Game {
             this.OBSTACLE_PREFAB,
             this.OBSTACLE_MATERIAL
         );
+        this.setupObstacle(obj);
+
         this.objectsParent.add(obj);
     }
 
@@ -137,8 +140,37 @@ export class Game {
         );
     }
 
-    spawnBonus(){
+    randomInit(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
+    spawnBonus(){
+        const obj = new THREE.Mesh(
+            this.BONUS_PREFAB,
+            new THREE.MeshBasicMaterial({color: 0x000000})
+        );
+
+        this.setupBonus(obj);
+        this.objectsParent.add(obj);
+    }
+
+    setupBonus(obj, refXpos = 0, refZpos = 0) {
+        const price = this.randomInit(5, 20);
+        const ratio = price / 20;
+
+        const size = ratio * 0.5;
+        obj.scale.set(size, size, size);
+
+        const hue = 0.5 + 0.5 * ratio;
+        obj.material.color.setHSL(hue, 1, 0.5);
+
+        obj.position.set(
+            refXpos + this.randomFloat(-30, 30),
+            obj.scale.y * 0.5,
+            refZpos - 100 - this.randomFloat(0, 100)
+        )
     }
 
     createGrid(scene) {
@@ -214,7 +246,10 @@ export class Game {
             //spawn 15 obstacles
             for (let i = 0; i < 15; i++)
                 this.spawnObject();
-
+            // spawn 15 Bonus Spheres
+            for (let i = 0; i < 15; i++)
+                this.spawnBonus();
+            
             camera.rotateX(-20 * Math.PI / 180);
             camera.position.set(0, 1.5, 2);
     }
