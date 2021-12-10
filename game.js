@@ -8,12 +8,37 @@ export class Game {
 
     constructor(scene, camera){
         //init variables
+        this.speedZ = 20;
         //prepare 3D scene
         this.initScene(scene, camera);
 
         //bind event calls
         document.addEventListener('keydown', this.keyDown.bind(this));
         document.addEventListener('keyup', this.keyUp.bind(this));
+    }
+    
+    updateGrid() {
+        //will update the grid to move backwards to seem like were moving forward in the world
+        this.grid.material.uniforms.time.value = this.time;
+        this.objectsParent.position.z = this.speedZ * this.time;
+
+        this.objectsParent.traverse((child) => {
+            if(child instanceof THREE.Mesh) {
+                //checks if object is higher value than our z = 0 and resets if it needs to
+                //z-position in world space
+                const childZPos = child.position.z + this.objectsParent.position.z; //getting objects world position
+                if(childZPos > 0){
+                    //resets object
+                    const params = [child, this.ship.position.x, -this.objectsParent.position.z]
+                    if(child.userData.type === 'obstacle'){
+                        this.setupObstacle(...params);
+                    }
+                    else {
+                        this.setupBonus(...params);
+                    }
+                }
+            }
+        });
     }
 
     update() {
@@ -33,12 +58,6 @@ export class Game {
 
     keyUp() {
         //reset object to idle 
-    }
-
-    updateGrid() {
-        //will update the grid to move backwards to seem like were moving forward in the world
-        this.grid.material.uniforms.time.value = this.time;
-        this.objectsParent.position.z = this.speedZ * this.time;
     }
 
     checkCollisions(){
@@ -123,6 +142,7 @@ export class Game {
         this.setupObstacle(obj);
 
         this.objectsParent.add(obj);
+        obj.userData = { type: 'obstacle' };
     }
 
     setupObstacle(obj, refXpos = 0, refZpos = 0) {
@@ -140,7 +160,7 @@ export class Game {
         );
     }
 
-    randomInit(min, max) {
+    randomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -154,10 +174,12 @@ export class Game {
 
         this.setupBonus(obj);
         this.objectsParent.add(obj);
+
+        obj.userData = {type: 'bonus'};
     }
 
     setupBonus(obj, refXpos = 0, refZpos = 0) {
-        const price = this.randomInit(5, 20);
+        const price = this.randomInt(5, 20);
         const ratio = price / 20;
 
         const size = ratio * 0.5;
@@ -170,11 +192,11 @@ export class Game {
             refXpos + this.randomFloat(-30, 30),
             obj.scale.y * 0.5,
             refZpos - 100 - this.randomFloat(0, 100)
-        )
+        );
+
     }
 
     createGrid(scene) {
-        this.speedZ = 20;
         
         let divisions = 30;
         let gridLimit = 200;
@@ -244,11 +266,13 @@ export class Game {
             scene.add(this.objectsParent);
 
             //spawn 15 obstacles
-            for (let i = 0; i < 15; i++)
+            for (let i = 0; i < 15; i++){
                 this.spawnObject();
+            }
             // spawn 15 Bonus Spheres
-            for (let i = 0; i < 15; i++)
+            for (let i = 0; i < 15; i++){
                 this.spawnBonus();
+            }
             
             camera.rotateX(-20 * Math.PI / 180);
             camera.position.set(0, 1.5, 2);
