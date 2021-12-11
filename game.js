@@ -5,12 +5,17 @@ export class Game {
     OBSTACLE_PREFAB =  new THREE.BoxBufferGeometry(1, 1, 1);
     OBSTACLE_MATERIAL = new THREE.MeshBasicMaterial({color: 0xccdeee});
     BONUS_PREFAB = new THREE.SphereBufferGeometry(1, 12, 12);
+    COLLISION_THRESHOLD = 0.2;
 
     constructor(scene, camera){
         //init variables
         this.speedZ = 20;
         this.speedX = 0; //0 = straight, -1 = left, 1 = right
         this.translateX = 0;
+        this.health = 100;
+        this.score = 0;
+        this.divHealth = document.getElementById('health');
+        this.divScore = document.getElementById('score');
         //prepare 3D scene
         this.initScene(scene, camera);
 
@@ -108,12 +113,13 @@ export class Game {
                 const childZPos = child.position.z + this.objectsParent.position.z; //getting objects world position
                 if(childZPos > 0){
                     //resets object
-                    const params = [child, this.ship.position.x, -this.objectsParent.position.z]
+                    const params = [child, -this.translateX, -this.objectsParent.position.z]
                     if(child.userData.type === 'obstacle'){
                         this.setupObstacle(...params);
                     }
                     else {
-                        this.setupBonus(...params);
+                        const price = this.setupBonus(...params);
+                        child.userData.price = price;
                     }
                 }
             }
@@ -156,7 +162,36 @@ export class Game {
 
     checkCollisions(){
         //this will be collision logic
-        //checks for obstacles
+        this.objectsParent.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                const childZPos = child.position.z + this.objectsParent.position.z;
+
+                //threshold distances
+                const thresholdX = this.COLLISION_THRESHOLD + child.scale.x / 2; // This distance is half the size of the Mesh + collision offset defined above
+                const thresholdZ = this.COLLISION_THRESHOLD + child.scale.z / 2; 
+                
+                //checks for collision
+                if (
+                    childZPos > -thresholdZ && 
+                    Math.abs(child.position.x + this.translateX) < thresholdX //Math.abs to always get a positive value & compare it to thresholdX
+                ) {
+                    //if collision reduce health
+                    const params = [child, -this.translateX, -this.objectsParent.position.z];
+                    if (child.userData.type === 'obstacle'){
+                        this.health -= 10;
+                        this.divHealth.innerText = ('Health: ' + this.health);
+                        this.setupObstacle(...params);
+                    }
+                    else {
+                        //increase score
+                        this.score += child.userData.price;
+                        this.divScore.innerText = ('SCORE: ' + this.score);
+                        child.userData.price = this.setupBonus(...params);
+                    }
+                }
+            }
+        })
+
         //checks power ups?
         //bonuses?
     }
@@ -265,11 +300,12 @@ export class Game {
             this.BONUS_PREFAB,
             new THREE.MeshBasicMaterial({color: 0x000000})
         );
-
-        this.setupBonus(obj);
+        
+        const price = this.setupBonus(obj);
         this.objectsParent.add(obj);
 
-        obj.userData = {type: 'bonus'};
+        obj.userData = {type: 'bonus', price};
+
     }
 
     setupBonus(obj, refXpos = 0, refZpos = 0) {
@@ -288,6 +324,8 @@ export class Game {
             refZpos - 100 - this.randomFloat(0, 100)
         );
 
+        return price;
+
     }
 
     initScene(scene, camera) {
@@ -299,13 +337,13 @@ export class Game {
             scene.add(this.objectsParent);
 
             //spawn 15 obstacles
-            for (let i = 0; i < 15; i++){
+            for (let i = 0; i < 50; i++)
                 this.spawnObject();
-            }
+            
             // spawn 15 Bonus Spheres
-            for (let i = 0; i < 15; i++){
+            for (let i = 0; i < 25; i++)
                 this.spawnBonus();
-            }
+            
             
             camera.rotateX(-20 * Math.PI / 180);
             camera.position.set(0, 1.5, 2);
