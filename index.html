@@ -11,8 +11,23 @@
   </head>
   <body>
     <div id="UI">
-      <div id="health"></div>
-      <div id="score"></div>
+      <div id="title">Neo Logs</div>
+      <div class="divider"></div>
+      <div id="score-row">Score: 
+        <div id="score"></div>
+      </div>
+      <div id="distance-row"> Distance: 
+        <div id="distance"></div>
+      </div>
+      <div class="divider"></div>
+      <div>Body Health</div>
+      <input id="health" type="range" min="0" max="100" disabled>
+    </div>
+    <div id="intro-screen">
+      <div id="intro-column">
+        <div id="intro-title">Welcome To Neo Runner</div>
+        <button id="start-button">Start</button>
+      </div>
     </div>
   </body>
 </html>

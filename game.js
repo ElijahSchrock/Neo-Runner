@@ -5,7 +5,7 @@ export class Game {
     OBSTACLE_PREFAB =  new THREE.BoxBufferGeometry(1, 1, 1);
     OBSTACLE_MATERIAL = new THREE.MeshBasicMaterial({color: 0xccdeee});
     BONUS_PREFAB = new THREE.SphereBufferGeometry(1, 12, 12);
-    COLLISION_THRESHOLD = 0.2;
+    COLLISION_THRESHOLD = 0.5;
 
     constructor(scene, camera){
         //init variables
@@ -14,8 +14,19 @@ export class Game {
         this.translateX = 0;
         this.health = 100;
         this.score = 0;
+        this.running = false
+        //DOM elements
+        this.divDistance = document.getElementById('distance');
         this.divHealth = document.getElementById('health');
         this.divScore = document.getElementById('score');
+        document.getElementById('start-button').onclick = () => {
+            this.running = true;
+            document.getElementById('intro-screen').style.display = 'none';
+        }
+        //init DOMS with start values
+        this.divScore.innerText = this.score;
+        this.divHealth.value = this.health;
+        this.divDistance.innerText = 0;
         //prepare 3D scene
         this.initScene(scene, camera);
 
@@ -128,7 +139,8 @@ export class Game {
 
     update() {
         //event handle
-
+        if(!this.running)
+            return
         //updating the game state
         this.time += this.clock.getDelta(); //increments time variable 
 
@@ -179,13 +191,13 @@ export class Game {
                     const params = [child, -this.translateX, -this.objectsParent.position.z];
                     if (child.userData.type === 'obstacle'){
                         this.health -= 10;
-                        this.divHealth.innerText = ('Health: ' + this.health);
+                        this.divHealth.value = this.health;
                         this.setupObstacle(...params);
                     }
                     else {
                         //increase score
                         this.score += child.userData.price;
-                        this.divScore.innerText = ('SCORE: ' + this.score);
+                        this.divScore.innerText = this.score;
                         child.userData.price = this.setupBonus(...params);
                     }
                 }
@@ -198,7 +210,8 @@ export class Game {
 
     updateUserUI() {
         //this will update DOM elements to track and show
-        //distance traveled?
+        //distance traveled
+        this.divDistance.innerText = this.objectsParent.position.z.toFixed(0);
         //score?
         //current game state
         //lives?

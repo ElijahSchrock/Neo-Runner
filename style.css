@@ -5,4 +5,117 @@ body {
 #UI {
     position: absolute;
     color: yellow;
+    left: 0;
+    top: 0;
+    border: 1px solid yellow;
+    padding: 0.5rem;
+    font-family: monospace;
 }
+
+#distance-row, #score-row {
+    display: flex;
+}
+
+#score, #distance {
+    margin-left: 0.5rem;
+}
+
+.divider {
+    width: 100%;
+    height: 2px;
+    background-color: yellow;
+    margin: 0.5rem 0;
+}
+
+#UI, #title {
+    font-weight: bold;
+}
+
+/* Styles Healthbar to have no thumb for Chrome, Edge, Safari, Brave Web-Kit*/
+
+input[type='range'] {
+    height: 12px;
+    -webkit-appearance: none;
+    margin: 10px 0;
+    width: 100%;
+  }
+  input[type='range']:focus {
+    outline: none;
+  }
+
+ input[type='range']::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 12px;
+    background: #333333;
+    overflow: hidden;
+  }
+  
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 12px;
+    -webkit-appearance: none;
+    background: #333333;
+    margin-top: -1px;
+  }
+  
+  input[type='range']::-webkit-slider-thumb {
+    width: 0;
+    -webkit-appearance: none;
+    height: 12px;
+    cursor: ew-resize;
+    background: transparent;
+    box-shadow: -100px 0 0 100px #4194e2;
+  }
+  /* Removing healthbar thumb for players on FireFox*/
+  input[type='range']::-moz-range-track {
+    width: 100%;
+    height: 12px;
+    background: #333333;
+  }
+  input[type='range']::-moz-range-thumb {
+    opacity: 0;
+  }
+  input[type='range']::-moz-range-progress {
+    height: 12px;
+    background: #4194e2;
+  }
+
+  #intro-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    background-color: black;
+    color: yellow;
+    font-family: monospace;
+    z-index: 10;
+  }
+
+  #intro-column {
+      text-align: center;
+  }
+
+  #intro-title {
+      font-size: 2rem;
+      margin-bottom: 3rem;
+  }
+
+  #start-button {
+      background-color: black;
+      border: 1px solid yellow;
+      border-radius: 100%;
+      padding: 0.5rem;
+      color: yellow;
+      font-family: monospace;
+      cursor: pointer;
+  }
+
+  #start-button:hover {
+      background-color: #302b5e;
+  }
+
+  #start-button:active {
+      background-color: #0f0a49;
+  }
