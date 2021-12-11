@@ -12,14 +12,6 @@ body {
     font-family: monospace;
 }
 
-#distance-row, #score-row {
-    display: flex;
-}
-
-#score, #distance {
-    margin-left: 0.5rem;
-}
-
 .divider {
     width: 100%;
     height: 2px;
@@ -79,7 +71,7 @@ input[type='range'] {
     background: #4194e2;
   }
 
-  #intro-screen {
+  #intro-screen, #game-over-screen {
     position: absolute;
     top: 0;
     left: 0;
@@ -92,17 +84,20 @@ input[type='range'] {
     font-family: monospace;
     z-index: 10;
   }
-
-  #intro-column {
+  
+  #game-over-screen {
+    display: none;
+}
+  #intro-column, #game-over-column {
       text-align: center;
   }
 
-  #intro-title {
+  #intro-title, #game-over-title {
       font-size: 2rem;
       margin-bottom: 3rem;
   }
 
-  #start-button {
+  #start-button, #replay-game-button {
       background-color: black;
       border: 1px solid yellow;
       border-radius: 100%;
@@ -112,10 +107,18 @@ input[type='range'] {
       cursor: pointer;
   }
 
-  #start-button:hover {
+  #start-button:hover, #replay-game-button:hover {
       background-color: #302b5e;
   }
 
-  #start-button:active {
+  #start-button:active, #replay-game-button:active {
       background-color: #0f0a49;
   }
+
+  #distance-row, #score-row, #game-over-score-row, #game-over-distance-row {
+    display: flex;
+}
+
+#score, #distance, #game-over-score, #game-over-distance {
+    margin-left: 0.5rem;
+}

@@ -12,13 +12,18 @@ export class Game {
         this.speedZ = 20;
         this.speedX = 0; //0 = straight, -1 = left, 1 = right
         this.translateX = 0;
-        this.health = 100;
+        this.health = 10;
         this.score = 0;
         this.running = false
         //DOM elements
         this.divDistance = document.getElementById('distance');
         this.divHealth = document.getElementById('health');
         this.divScore = document.getElementById('score');
+
+        this.divGameOverScreen = document.getElementById('game-over-screen');
+        this.divGameOverScore = document.getElementById('game-over-score');
+        this.divGameOverDistance = document.getElementById('game-over-distance');
+
         document.getElementById('start-button').onclick = () => {
             this.running = true;
             document.getElementById('intro-screen').style.display = 'none';
@@ -193,6 +198,8 @@ export class Game {
                         this.health -= 10;
                         this.divHealth.value = this.health;
                         this.setupObstacle(...params);
+                        if (this.health <= 0)
+                            this.gameOver();
                     }
                     else {
                         //increase score
@@ -218,7 +225,15 @@ export class Game {
     }
 
     gameOver() {
-
+        //prepare end state
+        this.running = false;
+        //show UI
+        this.divGameOverScore.innerText = this.score;
+        this.divGameOverDistance.innerText = this.objectsParent.position.z.toFixed(0);
+        setTimeout(() => {
+            this.divGameOverScreen.style.display = 'grid';
+        //allows a 1 sec pause between game over and game over screen
+        }, 1000)
     }
 
     createShip(scene){
