@@ -71,7 +71,7 @@ input[type='range'] {
     background: #4194e2;
   }
 
-  #intro-screen, #game-over-screen {
+  #intro-screen, #game-over-screen{
     position: absolute;
     top: 0;
     left: 0;
@@ -85,40 +85,60 @@ input[type='range'] {
     z-index: 10;
   }
   
-  #game-over-screen {
+  #pause-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
+    background-color: none;
+    color: yellow;
+    font-family: monospace;
+    z-index: 10;
+  }
+
+  #game-over-screen, #pause-screen {
     display: none;
 }
-  #intro-column, #game-over-column {
-      text-align: center;
+
+  #intro-column, #game-over-column, #pause-column {
+    text-align: center;
   }
 
-  #intro-title, #game-over-title {
-      font-size: 2rem;
-      margin-bottom: 3rem;
+  #intro-title, #game-over-title, #pause-title {
+    font-size: 2rem;
+    margin-bottom: 3rem;
   }
 
-  #start-button, #replay-game-button {
-      background-color: black;
-      border: 1px solid yellow;
-      border-radius: 100%;
-      padding: 0.5rem;
-      color: yellow;
-      font-family: monospace;
-      cursor: pointer;
+  #start-button, #replay-game-button, #end-pause-button {
+    background-color: black;
+    border: 1px solid yellow;
+    border-radius: 100%;
+    padding: 0.5rem;
+    color: yellow;
+    font-family: monospace;
+    cursor: pointer;
   }
 
-  #start-button:hover, #replay-game-button:hover {
-      background-color: #302b5e;
+  #replay-game-button {
+      padding-top: 0.3rem;
   }
 
-  #start-button:active, #replay-game-button:active {
-      background-color: #0f0a49;
+  #start-button:hover, #replay-game-button:hover, #end-pause-button:hover {
+    background-color: #302b5e;
   }
 
-  #distance-row, #score-row, #game-over-score-row, #game-over-distance-row {
+  #start-button:active, #replay-game-button:active, #end-pause-button:active {
+    background-color: #0f0a49;
+  }
+
+  #distance-row, #score-row, #game-over-score-row, #game-over-distance-row, #pause-score-row, #pause-distance-row {
     display: flex;
 }
 
-#score, #distance, #game-over-score, #game-over-distance {
+#score, #distance, #game-over-score, #game-over-distance, #pause-score, #pause-distance {
     margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
 }

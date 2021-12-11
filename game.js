@@ -8,12 +8,6 @@ export class Game {
     COLLISION_THRESHOLD = 0.5;
 
     constructor(scene, camera){
-        //init variables
-        this.speedZ = 20;
-        this.speedX = 0; //0 = straight, -1 = left, 1 = right
-        this.translateX = 0;
-        this.health = 10;
-        this.score = 0;
         this.running = false
         //DOM elements
         this.divDistance = document.getElementById('distance');
@@ -24,20 +18,49 @@ export class Game {
         this.divGameOverScore = document.getElementById('game-over-score');
         this.divGameOverDistance = document.getElementById('game-over-distance');
 
+        this.divPauseScreen = document.getElementById('pause-screen');
+        this.divPauseScore = document.getElementById('pause-score');
+        this.divPauseDistance = document.getElementById('pause-distance');
+
         document.getElementById('start-button').onclick = () => {
             this.running = true;
             document.getElementById('intro-screen').style.display = 'none';
         }
+        document.getElementById('replay-game-button').onclick = () => {
+            this.running = true;
+            this.divGameOverScreen.style.display = 'none';
+        }
+        document.getElementById('end-pause-button').onclick = () => {
+            this.running = true;
+            this.clock.start;
+            this.objectsParent.position.z
+            this.divPauseScreen.style.display = 'none';
+        }
+        this.scene = scene;
+        this.camera = camera;
+        this.reset(false);
+
+        //bind event calls
+        document.addEventListener('keydown', this.keyDown.bind(this));
+        document.addEventListener('keypress', this.keyPress.bind(this));
+        document.addEventListener('keyup', this.keyUp.bind(this));        
+    }
+
+    reset(replay) {
+        //init variables
+        this.speedZ = 20;
+        this.speedX = 0; //0 = straight, -1 = left, 1 = right
+        this.translateX = 0;
+        this.time = 0;
+        this.clock = new THREE.Clock();
+        this.health = 100;
+        this.score = 0;
         //init DOMS with start values
         this.divScore.innerText = this.score;
         this.divHealth.value = this.health;
         this.divDistance.innerText = 0;
         //prepare 3D scene
-        this.initScene(scene, camera);
-
-        //bind event calls
-        document.addEventListener('keydown', this.keyDown.bind(this));
-        document.addEventListener('keyup', this.keyUp.bind(this));
+        this.initScene(this.scene, this.camera, replay);
     }
 
     createGrid(scene) {
@@ -110,8 +133,6 @@ export class Game {
 
         scene.add(this.grid);
 
-        this.time = 0;
-        this.clock = new THREE.Clock();
     }
 
     updateGrid() {
@@ -177,6 +198,15 @@ export class Game {
         this.speedX = 0;
     }
 
+    keyPress() {
+        this.running = false;
+        this.clock.running = false;
+         //show Paused UI
+         this.divPauseScreen.style.display = 'grid';
+         this.divPauseScore.innerText = this.score;
+         this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
+    }
+
     checkCollisions(){
         //this will be collision logic
         this.objectsParent.traverse((child) => {
@@ -232,6 +262,8 @@ export class Game {
         this.divGameOverDistance.innerText = this.objectsParent.position.z.toFixed(0);
         setTimeout(() => {
             this.divGameOverScreen.style.display = 'grid';
+            //reset variables 
+            this.reset(true);
         //allows a 1 sec pause between game over and game over screen
         }, 1000)
     }
@@ -356,7 +388,8 @@ export class Game {
 
     }
 
-    initScene(scene, camera) {
+    initScene(scene, camera, replay) {
+        if (!replay){
             //init 3D scene
             this.createShip(scene);
             this.createGrid(scene);
@@ -375,5 +408,20 @@ export class Game {
             
             camera.rotateX(-20 * Math.PI / 180);
             camera.position.set(0, 1.5, 2);
+        } else {
+            this.objectsParent.traverse((child) => {
+                if(child instanceof THREE.Mesh) {
+                    //object insdide the anchor
+                    if(child.userData.type === 'obstacle')
+                        this.setupObstacle(child);
+                    else
+                        child.userData.price = this.setupBonus(child);
+                }
+                else {
+                    //the anchor
+                    child.position.set(0, 0, 0)
+                }
+            })
+        }
     }
 }
