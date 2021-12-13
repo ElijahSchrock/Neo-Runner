@@ -53,7 +53,7 @@ export class Game {
         this.translateX = 0;
         this.time = 0;
         this.clock = new THREE.Clock();
-        this.health = 100;
+        this.health = 50;
         this.score = 0;
         //init DOMS with start values
         this.divScore.innerText = this.score;
