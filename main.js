@@ -12,12 +12,16 @@ window.onload = () => {
 
   document.body.appendChild(renderer.domElement);
 
+  const light = new THREE.HemisphereLight(0xffffff, 0x444444, 3.0);
+  light.position.set(0, 1, 0);
+  scene.add(light)
+
   const gameInstance = new Game(scene, camera);
 
   function animate() {
     requestAnimationFrame(animate);
     gameInstance.update();
-    renderer.render(scene, camera);
+    renderer.render(scene, camera);  
   }
   animate();
 }

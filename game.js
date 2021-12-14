@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export class Game {
 
@@ -268,55 +269,26 @@ export class Game {
         }, 1000)
     }
 
-    createShip(scene){
+    createNeo(scene){
         //use this fucntion to load in model of runner
-        const shipBody = new THREE.Mesh(
-            new THREE.TetrahedronBufferGeometry(0.4),
-            new THREE.MeshBasicMaterial({color: 0x32CD32}),
-        );
+        const loader = new GLTFLoader();
+            loader.load('/models/Neo.glb', (gltf) => {
+                this.neo = gltf.scene;
+                this.neo.scale.set(0.04, 0.04, 0.04);
+                this.neo.position.x = 0;
+                this.neo.position.y = 0;
+                this.neo.position.z = 0;
+                this.mixer = new THREE.AnimationMixer(gltf.scene);
+                console.log(gltf.animations);
+                this.action = this.mixer.clipAction(gltf.animations[1]).play();
 
-        shipBody.rotateX(45 * Math.PI / 180);
-        shipBody.rotateY(45* Math.PI / 180);
-
-        this.ship = new THREE.Group();
-        this.ship.add(shipBody);
-
-        scene.add(this.ship);
-
-        const reactorSocketGeometry = new THREE.CylinderBufferGeometry(0.08, 0.08, 0.1, 16);
-        const reactorSocketMaterial = new THREE.MeshBasicMaterial({ color: 0x99aacc });
-
-        const reactorSocket1 = new THREE.Mesh(reactorSocketGeometry, reactorSocketMaterial);
-        const reactorSocket2 = new THREE.Mesh(reactorSocketGeometry, reactorSocketMaterial);
-        const reactorSocket3 = new THREE.Mesh(reactorSocketGeometry, reactorSocketMaterial);
-
-        this.ship.add(reactorSocket1);
-        this.ship.add(reactorSocket2);
-        this.ship.add(reactorSocket3);
-
-        reactorSocket1.rotateX(90 * Math.PI / 180);
-        reactorSocket1.position.set(-0.15, 0, 0.1);
-        reactorSocket2.rotateX(90 * Math.PI / 180);
-        reactorSocket2.position.set(0.15, 0, 0.1);
-        reactorSocket3.rotateX(90 * Math.PI / 180);
-        reactorSocket3.position.set(0, -0.15, 0.1);
-
-        const reactorLightGeometry = new THREE.CylinderBufferGeometry(0.055, 0.055, 0.1, 16);
-        const reactorLightMaterial = new THREE.MeshBasicMaterial({ color: 0xaadeff });
-
-        const reactorLight1 = new THREE.Mesh(reactorLightGeometry, reactorLightMaterial);
-        const reactorLight2 = new THREE.Mesh(reactorLightGeometry, reactorLightMaterial);
-        const reactorLight3 = new THREE.Mesh(reactorLightGeometry, reactorLightMaterial);
-    
-        this.ship.add(reactorLight1);
-        this.ship.add(reactorLight2);
-        this.ship.add(reactorLight3);
-        reactorLight1.rotateX(90 * Math.PI / 180);
-        reactorLight1.position.set(-0.15, 0, 0.11);
-        reactorLight2.rotateX(90 * Math.PI / 180);
-        reactorLight2.position.set(0.15, 0, 0.11);
-        reactorLight3.rotateX(90 * Math.PI / 180);
-        reactorLight3.position.set(0, -0.15, 0.11);
+                this.scene.add(this.neo);
+                
+            }, function(xhr){ //function to give model loading progress
+                console.log((xhr.loaded/xhr.total * 100) + '% loaded');
+            }, function(error){
+                console.log('An error occurred')
+            })
     }
 
     randomFloat(min, max) {
@@ -391,7 +363,7 @@ export class Game {
     initScene(scene, camera, replay) {
         if (!replay){
             //init 3D scene
-            this.createShip(scene);
+            this.createNeo(scene);
             this.createGrid(scene);
 
             this.objectsParent = new THREE.Group();
@@ -405,6 +377,7 @@ export class Game {
             for (let i = 0; i < 25; i++)
                 this.spawnBonus();
             
+            if ( this.mixer ) this.mixer.update( this.clock.getDelta() );
             
             camera.rotateX(-20 * Math.PI / 180);
             camera.position.set(0, 1.5, 2);
