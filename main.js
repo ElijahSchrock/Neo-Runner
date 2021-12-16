@@ -20,7 +20,7 @@ window.onload = () => {
 
   function animate() {
     requestAnimationFrame(animate);
-    gameInstance.update();
+    gameInstance.recondition();
     renderer.render(scene, camera);  
   }
   animate();

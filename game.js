@@ -43,7 +43,6 @@ export class Game {
 
         //bind event calls
         document.addEventListener('keydown', this.keyDown.bind(this));
-        document.addEventListener('keypress', this.keyPress.bind(this));
         document.addEventListener('keyup', this.keyUp.bind(this));        
     }
 
@@ -52,7 +51,7 @@ export class Game {
         this.speedZ = 20;
         this.speedX = 0; //0 = straight, -1 = left, 1 = right
         this.translateX = 0;
-        this.time = 0;
+        this.gameTime = 0;
         this.clock = new THREE.Clock();
         this.health = 50;
         this.score = 0;
@@ -138,8 +137,8 @@ export class Game {
 
     updateGrid() {
         //will update the grid to move backwards to seem like were moving forward in the world
-        this.grid.material.uniforms.time.value = this.time;
-        this.objectsParent.position.z = this.speedZ * this.time;
+        this.grid.material.uniforms.time.value = this.gameTime;
+        this.objectsParent.position.z = this.speedZ * this.gameTime;
 
         this.grid.material.uniforms.translateX.value = this.translateX;
         this.objectsParent.position.x = this.translateX;
@@ -164,18 +163,25 @@ export class Game {
         });
     }
 
-    update() {
+    recondition() {
         //event handle
         if(!this.running)
             return
         //updating the game state
-        this.time += this.clock.getDelta(); //increments time variable 
-
         this.translateX += this.speedX * -0.5;
 
+        this.deltaSeconds();
         this.updateGrid();
         this.checkCollisions();
         this.updateUserUI();
+    }
+
+    deltaSeconds() {
+        const deltaTime = this.clock.getDelta(); //increments time variable 
+        this.gameTime += deltaTime
+        if ( this.mixer ) {
+            this.mixer.update(deltaTime * 2);
+        }
     }
 
     keyDown(event) {
@@ -188,6 +194,19 @@ export class Game {
             case 'ArrowRight':
                 newSpeedX = 1
                 break;
+            case 'ArrowUp':
+                this.running = false;
+                this.clock.running = false;
+                 //show Paused UI
+                 this.divPauseScreen.style.display = 'grid';
+                 this.divPauseScore.innerText = this.score;
+                 this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
+                 break;
+            case 'ArrowDown':
+                this.running = true;
+                this.clock.start;
+                this.objectsParent.position.z
+                this.divPauseScreen.style.display = 'none';
             default:
                 return;
         }
@@ -197,15 +216,6 @@ export class Game {
     keyUp() {
         //reset object to idle 
         this.speedX = 0;
-    }
-
-    keyPress() {
-        this.running = false;
-        this.clock.running = false;
-         //show Paused UI
-         this.divPauseScreen.style.display = 'grid';
-         this.divPauseScore.innerText = this.score;
-         this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
     }
 
     checkCollisions(){
@@ -278,10 +288,11 @@ export class Game {
                 this.neo.position.x = 0;
                 this.neo.position.y = 0;
                 this.neo.position.z = 0;
-                this.mixer = new THREE.AnimationMixer(gltf.scene);
-                console.log(gltf.animations);
-                this.action = this.mixer.clipAction(gltf.animations[1]).play();
-
+                
+                this.mixer = new THREE.AnimationMixer( this.neo );
+                gltf.animations.forEach(( clip ) => {
+                    this.mixer.clipAction(clip).play();
+                })
                 this.scene.add(this.neo);
                 
             }, function(xhr){ //function to give model loading progress
@@ -361,6 +372,8 @@ export class Game {
     }
 
     initScene(scene, camera, replay) {
+        // if (this.mixer) this.mixer.update(this.clock);
+        
         if (!replay){
             //init 3D scene
             this.createNeo(scene);
@@ -376,8 +389,6 @@ export class Game {
             // spawn 15 Bonus Spheres
             for (let i = 0; i < 25; i++)
                 this.spawnBonus();
-            
-            if ( this.mixer ) this.mixer.update( this.clock.getDelta() );
             
             camera.rotateX(-20 * Math.PI / 180);
             camera.position.set(0, 1.5, 2);
