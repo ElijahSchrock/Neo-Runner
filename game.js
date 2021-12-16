@@ -180,7 +180,7 @@ export class Game {
         const deltaTime = this.clock.getDelta(); //increments time variable 
         this.gameTime += deltaTime
         if ( this.mixer ) {
-            this.mixer.update(deltaTime * 2);
+            this.mixer.update(deltaTime);
         }
     }
 
@@ -201,7 +201,7 @@ export class Game {
                  this.divPauseScreen.style.display = 'grid';
                  this.divPauseScore.innerText = this.score;
                  this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
-                 break;
+                 break
             case 'ArrowDown':
                 this.running = true;
                 this.clock.start;
@@ -291,7 +291,7 @@ export class Game {
                 
                 this.mixer = new THREE.AnimationMixer( this.neo );
                 gltf.animations.forEach(( clip ) => {
-                    this.mixer.clipAction(clip).play();
+                    this.mixer.clipAction(gltf.animations[1]).play();
                 })
                 this.scene.add(this.neo);
                 
