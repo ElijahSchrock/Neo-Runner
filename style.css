@@ -134,7 +134,7 @@ input[type='range'] {
     background-color: #0f0a49;
   }
 
-  #distance-row, #score-row, #game-over-score-row, #game-over-distance-row, #pause-score-row, #pause-distance-row, {
+  #distance-row, #score-row, #game-over-score-row, #game-over-distance-row, #pause-score-row, #pause-distance-row {
     display: flex;
 }
 
