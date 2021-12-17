@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
+export default defineConfig({
+    assetsInclude: ['**/*.glb']
+  })
+
 export class Game {
 
     OBSTACLE_PREFAB =  new THREE.BoxBufferGeometry(1, 1, 1);
