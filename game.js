@@ -18,6 +18,8 @@ export class Game {
 
         this.divIntroScreen = document.getElementById('intro-screen');
 
+        this.divProgressElement = document.getElementById('progressElement');
+
         this.divGameOverScreen = document.getElementById('game-over-screen');
         this.divGameOverScore = document.getElementById('game-over-score');
         this.divGameOverDistance = document.getElementById('game-over-distance');
@@ -295,8 +297,13 @@ export class Game {
     }
 
     createNeo(scene){
+        const loadingManager = new THREE.LoadingManager(() => {
+
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.classList.add('fade-out');
+          });
         //use this fucntion to load in model of runner
-        const loader = new GLTFLoader();
+        const loader = new GLTFLoader(loadingManager);
             loader.load('https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb', (gltf) => {
                 this.neo = gltf.scene;
                 this.neo.scale.set(0.04, 0.04, 0.04);
@@ -311,11 +318,15 @@ export class Game {
                 this.scene.add(this.neo);
                 
             }, function(xhr){ //function to give model loading progress
-                console.log((xhr.loaded/xhr.total * 100) + '% loaded');
+                if ( xhr.lengthComputable ) {
+                    var percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log( Math.round(percentComplete, 2) + '% downloaded')
+                }
             }, function(error){
                 console.log('An error occurred')
             })
     }
+
 
     randomFloat(min, max) {
         return Math.random() * (max - min) + min;
@@ -373,7 +384,7 @@ export class Game {
         const size = ratio * 0.5;
         obj.scale.set(size, size, size);
 
-        const hue = 0.5 + 0.5 * ratio;
+        const hue = 1 + 0.3 * ratio;
         obj.material.color.setHSL(hue, 1, 0.5);
 
         obj.position.set(
@@ -407,15 +418,14 @@ export class Game {
     //         this.BONUS_PREFAB,
     //         new THREE.MeshBasicMaterial({color: 0x000000})
     //     );
-    //         const price = this.setupBonus(obj)
+    //         // const price = this.setupBonus(obj)
     //         this.objectsParent.add(obj);
     
     //         obj.userData = {type: 'powerUp'};
     // }
 
     initScene(scene, camera, replay) {
-        // if (this.mixer) this.mixer.update(this.clock);
-        
+
         if (!replay){
             //init 3D scene
             this.createNeo(scene);
