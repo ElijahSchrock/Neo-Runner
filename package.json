@@ -9,7 +9,7 @@
     "postinstall": "vite build",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "vite": "^2.7.0"
