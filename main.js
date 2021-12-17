@@ -28,6 +28,7 @@ window.onload = () => {
     renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
+
   function animate() {
     requestAnimationFrame(animate);
     gameInstance.recondition();
