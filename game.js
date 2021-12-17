@@ -15,6 +15,8 @@ export class Game {
         this.divHealth = document.getElementById('health');
         this.divScore = document.getElementById('score');
 
+        this.divIntroScreen = document.getElementById('intro-screen');
+
         this.divGameOverScreen = document.getElementById('game-over-screen');
         this.divGameOverScore = document.getElementById('game-over-score');
         this.divGameOverDistance = document.getElementById('game-over-distance');
@@ -22,6 +24,9 @@ export class Game {
         this.divPauseScreen = document.getElementById('pause-screen');
         this.divPauseScore = document.getElementById('pause-score');
         this.divPauseDistance = document.getElementById('pause-distance');
+
+        this.divInstructScreen = document.getElementById('instructions');
+        this.divBackToPlay = document.getElementById('back-to-start-button');
 
         document.getElementById('start-button').onclick = () => {
             this.running = true;
@@ -36,6 +41,15 @@ export class Game {
             this.clock.start;
             this.objectsParent.position.z
             this.divPauseScreen.style.display = 'none';
+        }
+        document.getElementById('instruct-button').onclick = () => {
+            this.divIntroScreen.style.display = 'none';
+            this.divInstructScreen.style.display = 'grid';
+        }
+        document.getElementById('back-to-start-button').onclick = () => {
+            this.divInstructScreen.style.display = 'none';
+            this.divIntroScreen.style.display = 'grid';
+
         }
         this.scene = scene;
         this.camera = camera;
@@ -371,6 +385,33 @@ export class Game {
 
     }
 
+    // setupHurry(obj, refXpos = 0, refZpos = 0){
+    //     const powerUp = this.mixer.update(deltaTime * 2);
+
+    //     const size = 5;
+    //     obj.scale.set(size, size, size);
+
+    //     const hue = obj.material.color(0x000000);
+
+    //     obj.position.set(
+    //         refXpos + this.randomFloat(-30, 30),
+    //         obj.scale.y * 0.5,
+    //         refZpos - 100 - this.randomFloat(0, 100)
+    //     );
+
+    // }
+
+    // spawnHurry(){
+    //     const obj = new THREE.Mesh(
+    //         this.BONUS_PREFAB,
+    //         new THREE.MeshBasicMaterial({color: 0x000000})
+    //     );
+    //         const price = this.setupBonus(obj)
+    //         this.objectsParent.add(obj);
+    
+    //         obj.userData = {type: 'powerUp'};
+    // }
+
     initScene(scene, camera, replay) {
         // if (this.mixer) this.mixer.update(this.clock);
         
@@ -390,6 +431,9 @@ export class Game {
             for (let i = 0; i < 25; i++)
                 this.spawnBonus();
             
+            // for (let i = 0; i < 100; i++)
+            //     this.spawnHurry();
+
             camera.rotateX(-20 * Math.PI / 180);
             camera.position.set(0, 1.5, 2);
         } else {

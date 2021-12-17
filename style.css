@@ -71,7 +71,7 @@ input[type='range'] {
     background: #4194e2;
   }
 
-  #intro-screen, #game-over-screen{
+  #intro-screen, #game-over-screen, #instructions{
     position: absolute;
     top: 0;
     left: 0;
@@ -99,20 +99,20 @@ input[type='range'] {
     z-index: 10;
   }
 
-  #game-over-screen, #pause-screen {
+  #game-over-screen, #pause-screen, #instructions {
     display: none;
 }
 
-  #intro-column, #game-over-column, #pause-column {
+  #intro-column, #game-over-column, #pause-column, #instruct-column {
     text-align: center;
   }
 
-  #intro-title, #game-over-title, #pause-title {
+  #intro-title, #game-over-title, #pause-title, #instructions-title {
     font-size: 2rem;
     margin-bottom: 3rem;
   }
 
-  #start-button, #replay-game-button, #end-pause-button {
+  #start-button, #replay-game-button, #end-pause-button, #instruct-button, #back-to-start-button {
     background-color: black;
     border: 1px solid yellow;
     border-radius: 100%;
@@ -122,23 +122,23 @@ input[type='range'] {
     cursor: pointer;
   }
 
-  #replay-game-button {
+  #replay-game-button, #back-to-start-button {
       padding-top: 0.3rem;
   }
 
-  #start-button:hover, #replay-game-button:hover, #end-pause-button:hover {
+  #start-button:hover, #replay-game-button:hover, #end-pause-button:hover, #instruct-button:hover, #back-to-start-button:hover {
     background-color: #302b5e;
   }
 
-  #start-button:active, #replay-game-button:active, #end-pause-button:active {
+  #start-button:active, #replay-game-button:active, #end-pause-button:active, #instruct-button:active, #back-to-start-button:active {
     background-color: #0f0a49;
   }
 
-  #distance-row, #score-row, #game-over-score-row, #game-over-distance-row, #pause-score-row, #pause-distance-row {
+  #distance-row, #score-row, #game-over-score-row, #game-over-distance-row, #pause-score-row, #pause-distance-row, {
     display: flex;
 }
 
-#score, #distance, #game-over-score, #game-over-distance, #pause-score, #pause-distance {
+#score, #distance, #game-over-score, #game-over-distance, #pause-score, #pause-distance, #how-to-row {
     margin-left: 0.5rem;
     margin-bottom: 0.5rem;
 }
