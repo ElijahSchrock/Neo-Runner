@@ -296,7 +296,7 @@ export class Game {
     createNeo(scene){
         //use this fucntion to load in model of runner
         const loader = new GLTFLoader();
-            loader.load('../models/Neo.glb', (gltf) => {
+            loader.load('/models/Neo.glb', (gltf) => {
                 this.neo = gltf.scene;
                 this.neo.scale.set(0.04, 0.04, 0.04);
                 this.neo.position.x = 0;
