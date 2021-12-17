@@ -2,7 +2,7 @@
   "name": "endless-runner",
   "version": "0.0.0",
   "engines": {
-    "node": "17.0.1",
+    "node": "14x",
     "npm": "8.1.0"
   },
   "scripts": {
