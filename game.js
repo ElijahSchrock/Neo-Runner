@@ -304,7 +304,7 @@ export class Game {
           });
         //use this fucntion to load in model of runner
         const loader = new GLTFLoader(loadingManager);
-            loader.load('https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb', (gltf) => {
+            loader.load('./public/assets/Neo.glb', (gltf) => {
                 this.neo = gltf.scene;
                 this.neo.scale.set(0.04, 0.04, 0.04);
                 this.neo.position.x = 0;

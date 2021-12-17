@@ -103,11 +103,11 @@ input[type='range'] {
     display: none;
 }
 
-  #intro-column, #game-over-column, #pause-column, #instruct-column, #progress-column {
+  #intro-column, #game-over-column, #pause-column, #instruct-column, #loading-title {
     text-align: center;
   }
 
-  #intro-title, #game-over-title, #pause-title, #instructions-title {
+  #intro-title, #game-over-title, #pause-title, #instructions-title, #loading-title {
     font-size: 2rem;
     margin-bottom: 3rem;
   }
@@ -143,6 +143,11 @@ input[type='range'] {
     margin-bottom: 0.5rem;
 }
 
+#loading-title {
+  position: relative;
+  top: 200px;
+  margin-bottom: 0;
+}
 
 #loading-screen {
 	position: absolute;
