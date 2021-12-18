@@ -18,6 +18,8 @@ window.onload = () => {
 
   const gameInstance = new Game(scene, camera);
 
+  gameInstance.setupAudio();
+
   window.addEventListener( 'resize', onWindowResize, false );
 
   function onWindowResize(){
@@ -25,7 +27,7 @@ window.onload = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    this.renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
 

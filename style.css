@@ -238,3 +238,34 @@ input[type='range'] {
         transform: rotate(360deg);
     }
 }
+
+.score-popup {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: score-popup 1s ease-in-out;
+  animation-iteration-count: 1;
+  font-size: 30px;
+  color: yellow;
+}
+
+.health-popup {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: score-popup 1s ease-in-out;
+  animation-iteration-count: 1;
+  font-size: 30px;
+  color: red;
+}
+
+@keyframes score-popup {
+  0% {
+    top: 33%;
+    opacity: 1;
+  }
+  100% {
+    top: 25%;
+    opacity: 0;
+  }
+}

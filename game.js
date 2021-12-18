@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-
+import {Howl, Howler} from 'howler';
 
 export class Game {
 
@@ -80,6 +80,27 @@ export class Game {
         this.initScene(this.scene, this.camera, replay);
     }
 
+    setupAudio() {
+        //background audio
+        const musicAudio = new Howl ({
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
+            autoplay: true,
+            loop: true,
+            volume: 0.75
+        });
+        const musicId = musicAudio.play();
+            musicAudio.fade(0, 0.2, 5000, musicId)
+        //crash audio
+        this.crashAudio = new Howl ({
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
+            volume: .4
+        });
+        //bonus audio
+        this.bonusAudio = new Howl({
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/bonus-7.wav'],
+            volume: 0.2
+        });
+    }
     createGrid(scene) {
         
         let divisions = 30;
@@ -153,6 +174,9 @@ export class Game {
     }
 
     updateGrid() {
+        //increases game speed as game goes on 
+        this.speedZ += 0.002;
+        this.grid.material.uniforms.speedZ.value = this.speedZ;
         //will update the grid to move backwards to seem like were moving forward in the world
         this.grid.material.uniforms.time.value = this.gameTime;
         this.objectsParent.position.z = this.speedZ * this.gameTime;
@@ -253,6 +277,12 @@ export class Game {
                     //if collision reduce health
                     const params = [child, -this.translateX, -this.objectsParent.position.z];
                     if (child.userData.type === 'obstacle'){
+                        //health popup
+                        this.createHealthPopup();
+                        //play crash audio
+                        if (this.crashAudio)
+                            this.crashAudio.play();
+                        // reduce health if collision detected
                         this.health -= 10;
                         this.divHealth.value = this.health;
                         this.setupObstacle(...params);
@@ -260,6 +290,12 @@ export class Game {
                             this.gameOver();
                     }
                     else {
+                        //score popup
+                        this.createScorePopup(child.userData.price);
+                        //play bonus audio
+                        if (this.bonusAudio) {
+                            this.bonusAudio.play();
+                        }
                         //increase score
                         this.score += child.userData.price;
                         this.divScore.innerText = this.score;
@@ -268,9 +304,26 @@ export class Game {
                 }
             }
         })
+    }
 
-        //checks power ups?
-        //bonuses?
+    createScorePopup(score) {
+        const scorePopup = document.createElement('div');
+        scorePopup.innerText = `+${score}`;
+        scorePopup.className = 'score-popup';
+        document.body.appendChild(scorePopup);
+        setTimeout(() => {
+            scorePopup.remove();
+        }, 1000);
+    }
+
+    createHealthPopup(){
+        const healthPopup = document.createElement('div');
+        healthPopup.innerText = '-10'
+        healthPopup.className = 'health-popup';
+        document.body.appendChild(healthPopup);
+        setTimeout(() => {
+            healthPopup.remove();
+        }, 1000);
     }
 
     updateUserUI() {
