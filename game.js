@@ -83,7 +83,7 @@ export class Game {
     setupAudio() {
         //background audio
         const musicAudio = new Howl ({
-            src: ['./public/assets/background-music.mp3'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
             loop: true,
             volume: 0.75
@@ -92,12 +92,12 @@ export class Game {
             musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
-            src: ['./public/assets/obst-hit-option2.wav'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wavv'],
             volume: .4
         });
         //bonus audio
         this.bonusAudio = new Howl({
-            src: ['./public/assets/bonus-7.wav'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/bonus-7.wav'],
             volume: 0.2
         });
     }
@@ -393,7 +393,7 @@ export class Game {
           });
         //use this fucntion to load in model of runner
         const loader = new GLTFLoader(loadingManager);
-            loader.load('./public/assets/Neo.glb', (gltf) => {
+            loader.load('https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb', (gltf) => {
                 this.neo = gltf.scene;
                 this.neo.scale.set(0.04, 0.04, 0.04);
                 this.neo.position.x = 0;
