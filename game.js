@@ -83,7 +83,7 @@ export class Game {
     setupAudio() {
         //background audio
         const musicAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
+            src: ['./public/assets/background-music.mp3'],
             autoplay: true,
             loop: true,
             volume: 0.75
@@ -92,12 +92,12 @@ export class Game {
             musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
+            src: ['./public/assets/obst-hit-option2.wav'],
             volume: .4
         });
         //bonus audio
         this.bonusAudio = new Howl({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/bonus-7.wav'],
+            src: ['./public/assets/bonus-7.wav'],
             volume: 0.2
         });
     }
@@ -340,12 +340,49 @@ export class Game {
         //show UI
         this.divGameOverScore.innerText = this.score;
         this.divGameOverDistance.innerText = this.objectsParent.position.z.toFixed(0);
+
+        this.leaderBoard(score);
         setTimeout(() => {
             this.divGameOverScreen.style.display = 'grid';
             //reset variables 
             this.reset(true);
         //allows a 1 sec pause between game over and game over screen
         }, 1000)
+    }
+
+    leaderBoard() {
+        this.NO_OF_HIGH_SCORES = 10;
+        this.HIGH_SCORES = 'highScores';
+
+        const highScoreString = localStorage.getItem(this.HIGH_SCORES);
+        const highScores = JSON.parse(highScoreString) ?? []; // ?? nullish coalescing operator returns its right hand operand when left-hand side is null or undefined and otherwise returns left hand side operand.
+        const lowestScore = highScores[this.NO_OF_HIGH_SCORES - 1]?.this.score ?? 0;
+
+        if (this.score > lowestScore) {
+            this.saveHighScore(score, highScores);
+            this.showHighScore();
+        }
+    }
+
+    saveHighScore(score, highScores) {
+        const name = prompt('Neo has reached a highscore! Enter your name:');
+        const newScore = {score: this.score, distance: this.objectsParent.position.z.toFixed(0), name};
+        //adds to the list
+        highScores.push(newScore);
+        //sorts list
+        highScores.sort((a, b) => b.score - a.score);
+        //select new list
+        highScores.splice(this.NO_OF_HIGH_SCORES);
+        //save to local storage
+        localStorage.setItem(this.HIGH_SCORES, JSON.stringify(highScores));
+    }
+
+    showHighScore() {
+        const highScores = JSON.parse(localStorage.getItem(this.HIGH_SCORES)) ?? [];
+        const highScoreList = document.getElementById('highscore');
+
+        highScoreList.innerHTML = highScores.map((score) => 
+          `<li> ${score.name} Scored ${score.score} Points & Traveled ${score.distance} Feet`).join('');
     }
 
     createNeo(scene){
@@ -356,7 +393,7 @@ export class Game {
           });
         //use this fucntion to load in model of runner
         const loader = new GLTFLoader(loadingManager);
-            loader.load('https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb', (gltf) => {
+            loader.load('./public/assets/Neo.glb', (gltf) => {
                 this.neo = gltf.scene;
                 this.neo.scale.set(0.04, 0.04, 0.04);
                 this.neo.position.x = 0;

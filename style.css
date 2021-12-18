@@ -103,13 +103,22 @@ input[type='range'] {
     display: none;
 }
 
-  #intro-column, #game-over-column, #pause-column, #instruct-column, #loading-title {
+  #intro-column, #game-over-column, #pause-column, #instruct-column, #loading-title, #highscore-column {
     text-align: center;
   }
 
   #intro-title, #game-over-title, #pause-title, #instructions-title, #loading-title {
     font-size: 2rem;
     margin-bottom: 3rem;
+  }
+
+  #highscore-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  #highscore {
+    margin-bottom: 1rem;
   }
 
   #start-button, #replay-game-button, #end-pause-button, #instruct-button, #back-to-start-button {
