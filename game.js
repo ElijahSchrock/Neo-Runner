@@ -92,7 +92,7 @@ export class Game {
             musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wavv'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
             volume: .4
         });
         //bonus audio
