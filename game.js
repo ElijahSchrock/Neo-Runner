@@ -332,7 +332,6 @@ export class Game {
         this.divDistance.innerText = this.objectsParent.position.z.toFixed(0);
         //score?
         //current game state
-        //lives?
     }
 
     gameOver() {
