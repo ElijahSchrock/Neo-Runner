@@ -250,7 +250,7 @@ export class Game {
                 newSpeedX = 1
                 break;
             case 'ArrowUp':
-                if(this.running = true){
+                if(this.running === true){
                     this.running = false;
                     this.clock.running = false;
                         //show Paused UI
@@ -260,7 +260,7 @@ export class Game {
                 }
                  break;
             case 'ArrowDown':
-                if(this.running = true){
+                if(this.running === true){
                     this.running = true;
                     this.clock.start;
                     this.objectsParent.position.z
@@ -277,7 +277,7 @@ export class Game {
         this.speedX = 0;
 
         document.addEventListener('keyup', function(event){
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && this.running === false) {
                 event.preventDefault();
                 document.getElementById('start-button').onclick();
                 document.getElementById('replay-game-button').onclick();
