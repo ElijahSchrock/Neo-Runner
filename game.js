@@ -260,7 +260,7 @@ export class Game {
                 }
                  break;
             case 'ArrowDown':
-                if(this.running === true){
+                if(this.running === false){
                     this.running = true;
                     this.clock.start;
                     this.objectsParent.position.z
