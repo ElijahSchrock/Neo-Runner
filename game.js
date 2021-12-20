@@ -58,6 +58,7 @@ export class Game {
         document.getElementById('new-player-button').onclick = () => {
             this.divGameOverScreen.style.display = 'none';
             this.divIntroScreen.style.display = 'grid';
+            this.divInstructScreen.style.display = 'none';
         }
 
         this.scene = scene;
@@ -249,18 +250,26 @@ export class Game {
                 newSpeedX = 1
                 break;
             case 'ArrowUp':
-                this.running = false;
-                this.clock.running = false;
-                 //show Paused UI
-                 this.divPauseScreen.style.display = 'grid';
-                 this.divPauseScore.innerText = this.score;
-                 this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
+                if(this.divIntroScreen.style.display = 'none',
+                    this.divGameOverScreen.style.display = 'none',
+                    this.divInstructScreen.style.display = 'none'){
+                        this.running = false;
+                        this.clock.running = false;
+                        //show Paused UI
+                        this.divPauseScreen.style.display = 'grid';
+                        this.divPauseScore.innerText = this.score;
+                        this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
+                }
                  break;
             case 'ArrowDown':
-                this.running = true;
-                this.clock.start;
-                this.objectsParent.position.z
-                this.divPauseScreen.style.display = 'none';
+                if(this.divIntroScreen.style.display = 'none',
+                    this.divGameOverScreen.style.display = 'none',
+                    this.divInstructScreen.style.display = 'none'){
+                        this.running = true;
+                        this.clock.start;
+                        this.objectsParent.position.z
+                        this.divPauseScreen.style.display = 'none';
+                }
             default:
                 return;
         }
