@@ -250,25 +250,21 @@ export class Game {
                 newSpeedX = 1
                 break;
             case 'ArrowUp':
-                if(this.divIntroScreen.style.display = 'none',
-                    this.divGameOverScreen.style.display = 'none',
-                    this.divInstructScreen.style.display = 'none'){
-                        this.running = false;
-                        this.clock.running = false;
+                if(this.running = true){
+                    this.running = false;
+                    this.clock.running = false;
                         //show Paused UI
-                        this.divPauseScreen.style.display = 'grid';
-                        this.divPauseScore.innerText = this.score;
-                        this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
+                    this.divPauseScreen.style.display = 'grid';
+                    this.divPauseScore.innerText = this.score;
+                    this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
                 }
                  break;
             case 'ArrowDown':
-                if(this.divIntroScreen.style.display = 'none',
-                    this.divGameOverScreen.style.display = 'none',
-                    this.divInstructScreen.style.display = 'none'){
-                        this.running = true;
-                        this.clock.start;
-                        this.objectsParent.position.z
-                        this.divPauseScreen.style.display = 'none';
+                if(this.running = true){
+                    this.running = true;
+                    this.clock.start;
+                    this.objectsParent.position.z
+                    this.divPauseScreen.style.display = 'none';
                 }
             default:
                 return;
