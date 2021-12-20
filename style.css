@@ -71,6 +71,21 @@ input[type='range'] {
     background: #4194e2;
   }
 
+  #name {
+    margin-bottom: 2rem;
+    background-color: black;
+    color: yellow;
+  }
+
+  #name::placeholder {
+    color: yellow;
+    opacity: .2;
+  }
+
+  #name-title {
+    margin-top: 1rem;
+  }
+
   #intro-screen, #game-over-screen, #instructions{
     position: absolute;
     top: 0;
@@ -258,7 +273,7 @@ input[type='range'] {
   color: yellow;
 }
 
-.health-popup {
+.health-popup, .health-bonus-popup {
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -267,6 +282,7 @@ input[type='range'] {
   font-size: 30px;
   color: red;
 }
+
 
 @keyframes score-popup {
   0% {

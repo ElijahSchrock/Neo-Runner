@@ -7,6 +7,7 @@ export class Game {
     OBSTACLE_PREFAB =  new THREE.BoxBufferGeometry(1, 1, 1);
     OBSTACLE_MATERIAL = new THREE.MeshBasicMaterial({color: 0xccdeee});
     BONUS_PREFAB = new THREE.SphereBufferGeometry(1, 12, 12);
+    HEALTH_PREFAB = new THREE.SphereBufferGeometry(1, 12 ,12);
     COLLISION_THRESHOLD = 0.5;
 
     constructor(scene, camera){
@@ -17,6 +18,7 @@ export class Game {
         this.divScore = document.getElementById('score');
 
         this.divIntroScreen = document.getElementById('intro-screen');
+
 
         this.divProgressElement = document.getElementById('progressElement');
 
@@ -54,13 +56,14 @@ export class Game {
             this.divIntroScreen.style.display = 'grid';
 
         }
+
         this.scene = scene;
         this.camera = camera;
         this.reset(false);
 
         //bind event calls
         document.addEventListener('keydown', this.keyDown.bind(this));
-        document.addEventListener('keyup', this.keyUp.bind(this));        
+        document.addEventListener('keyup', this.keyUp.bind(this));
     }
 
     reset(replay) {
@@ -96,13 +99,18 @@ export class Game {
             volume: .4
         });
         //bonus audio
-        this.bonusAudio = new Howl({
+        this.bonusAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/bonus-7.wav'],
             volume: 0.2
         });
+        //health bonus audio
+        this.healthBonusAudio = new Howl ({
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/health-bonus.wav'],
+            volume: .7
+        });
     }
     createGrid(scene) {
-        
+
         let divisions = 30;
         let gridLimit = 200;
         this.grid = new THREE.GridHelper(gridLimit * 2, divisions, 0xccddee, 0xccddee);
@@ -136,12 +144,12 @@ export class Game {
             uniform vec2 gridLimits;
             uniform float speedZ;
             uniform float translateX;
-            
+
             attribute float moveableZ;
             attribute float moveableX;
-            
+
             varying vec3 vColor;
-        
+
             void main() {
             vColor = color;
             float limLen = gridLimits.y - gridLimits.x;
@@ -161,7 +169,7 @@ export class Game {
         `,
         fragmentShader: `
             varying vec3 vColor;
-        
+
             void main() {
             gl_FragColor = vec4(vColor, 1.);
             }
@@ -174,7 +182,7 @@ export class Game {
     }
 
     updateGrid() {
-        //increases game speed as game goes on 
+        //increases game speed as game goes on
         this.speedZ += 0.002;
         this.grid.material.uniforms.speedZ.value = this.speedZ;
         //will update the grid to move backwards to seem like were moving forward in the world
@@ -194,6 +202,8 @@ export class Game {
                     const params = [child, -this.translateX, -this.objectsParent.position.z]
                     if(child.userData.type === 'obstacle'){
                         this.setupObstacle(...params);
+                    } else if (child.userData.type === 'health'){
+                        this.setupHealth(...params);
                     }
                     else {
                         const price = this.setupBonus(...params);
@@ -218,7 +228,7 @@ export class Game {
     }
 
     deltaSeconds() {
-        const deltaTime = this.clock.getDelta(); //increments time variable 
+        const deltaTime = this.clock.getDelta(); //increments time variable
         this.gameTime += deltaTime
         if ( this.mixer ) {
             this.mixer.update(deltaTime);
@@ -242,7 +252,7 @@ export class Game {
                  this.divPauseScreen.style.display = 'grid';
                  this.divPauseScore.innerText = this.score;
                  this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
-                 break
+                 break;
             case 'ArrowDown':
                 this.running = true;
                 this.clock.start;
@@ -255,8 +265,17 @@ export class Game {
     }
 
     keyUp() {
-        //reset object to idle 
+        //reset object to idle
         this.speedX = 0;
+
+        document.addEventListener('keyup', function(event){
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById('start-button').onclick();
+                document.getElementById('replay-game-button').onclick();
+            }
+        })
+
     }
 
     checkCollisions(){
@@ -267,11 +286,11 @@ export class Game {
 
                 //threshold distances
                 const thresholdX = this.COLLISION_THRESHOLD + child.scale.x / 2; // This distance is half the size of the Mesh + collision offset defined above
-                const thresholdZ = this.COLLISION_THRESHOLD + child.scale.z / 2; 
-                
+                const thresholdZ = this.COLLISION_THRESHOLD + child.scale.z / 2;
+
                 //checks for collision
                 if (
-                    childZPos > -thresholdZ && 
+                    childZPos > -thresholdZ &&
                     Math.abs(child.position.x + this.translateX) < thresholdX //Math.abs to always get a positive value & compare it to thresholdX
                 ) {
                     //if collision reduce health
@@ -285,9 +304,25 @@ export class Game {
                         // reduce health if collision detected
                         this.health -= 10;
                         this.divHealth.value = this.health;
-                        this.setupObstacle(...params);
+                        this.setupObstacle(...params); //... is spread operator to take the array of params on line 197
                         if (this.health <= 0)
                             this.gameOver();
+                    } else if (child.userData.type === 'health'){
+                        //health bonus audio
+                        if (this.health < 50){
+                        //increases health
+                        if(this.health < 50){
+                            this.newHealth = this.health += 10;
+                        }
+                        //health bonus popup
+                        this.createHealthBonusPopup();                            
+                            if (this.healthBonusAudio) {
+                                this.healthBonusAudio.play();
+                            }                        
+                        //increases healthbar
+                        this.divHealth.value = this.newHealth;
+                        child.userData.health = this.setupHealth(...params);                            
+                        }
                     }
                     else {
                         //score popup
@@ -326,6 +361,16 @@ export class Game {
         }, 1000);
     }
 
+    createHealthBonusPopup(){
+        const healthBonusPopup = document.createElement('div');
+        healthBonusPopup.innerText = '+10'
+        healthBonusPopup.className = 'health-bonus-popup';
+        document.body.appendChild(healthBonusPopup);
+        setTimeout(() => {
+            healthBonusPopup.remove();
+        }, 1000)
+    }
+
     updateUserUI() {
         //this will update DOM elements to track and show
         //distance traveled
@@ -344,7 +389,7 @@ export class Game {
         this.leaderBoard(score);
         setTimeout(() => {
             this.divGameOverScreen.style.display = 'grid';
-            //reset variables 
+            //reset variables
             this.reset(true);
         //allows a 1 sec pause between game over and game over screen
         }, 1000)
@@ -353,6 +398,7 @@ export class Game {
     leaderBoard() {
         this.NO_OF_HIGH_SCORES = 10;
         this.HIGH_SCORES = 'highScores';
+        this.USER_NAME = document.getElementById('name').value
 
         const highScoreString = localStorage.getItem(this.HIGH_SCORES);
         const highScores = JSON.parse(highScoreString) ?? []; // ?? nullish coalescing operator returns its right hand operand when left-hand side is null or undefined and otherwise returns left hand side operand.
@@ -365,8 +411,8 @@ export class Game {
     }
 
     saveHighScore(score, highScores) {
-        const name = prompt('Neo has reached a highscore! Enter your name:');
-        const newScore = {score: this.score, distance: this.objectsParent.position.z.toFixed(0), name};
+        // const name = prompt('Neo has reached a highscore! Enter your name:');
+        const newScore = {score: this.score, distance: this.objectsParent.position.z.toFixed(0), name: this.USER_NAME};
         //adds to the list
         highScores.push(newScore);
         //sorts list
@@ -381,7 +427,7 @@ export class Game {
         const highScores = JSON.parse(localStorage.getItem(this.HIGH_SCORES)) ?? [];
         const highScoreList = document.getElementById('highscore');
 
-        highScoreList.innerHTML = highScores.map((score) => 
+        highScoreList.innerHTML = highScores.map((score) =>
           `<li> ${score.name} Scored ${score.score} Points & Traveled ${score.distance} Feet`).join('');
     }
 
@@ -399,13 +445,13 @@ export class Game {
                 this.neo.position.x = 0;
                 this.neo.position.y = 0;
                 this.neo.position.z = 0;
-                
+
                 this.mixer = new THREE.AnimationMixer( this.neo );
                 gltf.animations.forEach(( clip ) => {
                     this.mixer.clipAction(gltf.animations[1]).play();
                 })
                 this.scene.add(this.neo);
-                
+
             }, function(xhr){ //function to give model loading progress
                 if ( xhr.lengthComputable ) {
                     var percentComplete = xhr.loaded / xhr.total * 100;
@@ -453,27 +499,14 @@ export class Game {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    spawnBonus(){
-        const obj = new THREE.Mesh(
-            this.BONUS_PREFAB,
-            new THREE.MeshBasicMaterial({color: 0x000000})
-        );
-        
-        const price = this.setupBonus(obj);
-        this.objectsParent.add(obj);
-
-        obj.userData = {type: 'bonus', price};
-
-    }
-
     setupBonus(obj, refXpos = 0, refZpos = 0) {
         const price = this.randomInt(5, 20);
-        const ratio = price / 20;
+        this.ratio = price / 20;
 
-        const size = ratio * 0.5;
+        const size = this.ratio * 0.5;
         obj.scale.set(size, size, size);
 
-        const hue = 1 + 0.3 * ratio;
+        const hue = 1 + 0.3 * this.ratio;
         obj.material.color.setHSL(hue, 1, 0.5);
 
         obj.position.set(
@@ -486,32 +519,49 @@ export class Game {
 
     }
 
-    // setupHurry(obj, refXpos = 0, refZpos = 0){
-    //     const powerUp = this.mixer.update(deltaTime * 2);
+    spawnBonus(){
+        const obj = new THREE.Mesh(
+            this.BONUS_PREFAB,
+            new THREE.MeshBasicMaterial({color: 0x000000})
+        );
 
-    //     const size = 5;
-    //     obj.scale.set(size, size, size);
+        const price = this.setupBonus(obj);
+        this.objectsParent.add(obj);
 
-    //     const hue = obj.material.color(0x000000);
+        obj.userData = {type: 'bonus', price};
 
-    //     obj.position.set(
-    //         refXpos + this.randomFloat(-30, 30),
-    //         obj.scale.y * 0.5,
-    //         refZpos - 100 - this.randomFloat(0, 100)
-    //     );
+    }
 
-    // }
+    setupHealth(obj, refXpos = 0, refZpos = 0){
+        const price = this.randomInt(5, 20);
+        this.ratio = price / 20;
 
-    // spawnHurry(){
-    //     const obj = new THREE.Mesh(
-    //         this.BONUS_PREFAB,
-    //         new THREE.MeshBasicMaterial({color: 0x000000})
-    //     );
-    //         // const price = this.setupBonus(obj)
-    //         this.objectsParent.add(obj);
-    
-    //         obj.userData = {type: 'powerUp'};
-    // }
+        const size = this.ratio * 0.5;
+        obj.scale.set(size, size, size);
+
+        const hue = 1; // to get red for health
+        obj.material.color.setHSL(hue, 1, 0.5);
+
+        obj.position.set(
+            refXpos + this.randomFloat(-30, 30),
+            obj.scale.y * 0.5,
+            refZpos - 100 - this.randomFloat(0, 100)
+        );
+
+        return price;
+    }
+
+    spawnHealth(){
+        const obj = new THREE.Mesh(
+            this.BONUS_PREFAB,
+            new THREE.MeshBasicMaterial({color: 0x000000})
+        );
+
+        const price = this.setupHealth(obj);
+        this.objectsParent.add(obj);
+
+        obj.userData = {type: 'health', price};
+    }
 
     initScene(scene, camera, replay) {
 
@@ -526,13 +576,13 @@ export class Game {
             //spawn 15 obstacles
             for (let i = 0; i < 50; i++)
                 this.spawnObject();
-            
+
             // spawn 15 Bonus Spheres
             for (let i = 0; i < 25; i++)
                 this.spawnBonus();
-            
-            // for (let i = 0; i < 100; i++)
-            //     this.spawnHurry();
+
+            for (let i = 0; i < 10; i++)
+                this.spawnHealth();
 
             camera.rotateX(-20 * Math.PI / 180);
             camera.position.set(0, 1.5, 2);
