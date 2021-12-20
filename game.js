@@ -54,7 +54,10 @@ export class Game {
         document.getElementById('back-to-start-button').onclick = () => {
             this.divInstructScreen.style.display = 'none';
             this.divIntroScreen.style.display = 'grid';
-
+        }
+        document.getElementById('new-player-button').onclick = () => {
+            this.divGameOverScreen.style.display = 'none';
+            this.divIntroScreen.style.display = 'grid';
         }
 
         this.scene = scene;
