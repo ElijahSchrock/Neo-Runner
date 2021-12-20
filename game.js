@@ -8,7 +8,7 @@ export class Game {
     OBSTACLE_MATERIAL = new THREE.MeshBasicMaterial({color: 0xccdeee});
     BONUS_PREFAB = new THREE.SphereBufferGeometry(1, 12, 12);
     HEALTH_PREFAB = new THREE.SphereBufferGeometry(1, 12 ,12);
-    COLLISION_THRESHOLD = 0.5;
+    COLLISION_THRESHOLD = 0.7;
 
     constructor(scene, camera){
         this.running = false
@@ -581,7 +581,7 @@ export class Game {
             for (let i = 0; i < 25; i++)
                 this.spawnBonus();
 
-            for (let i = 0; i < 10; i++)
+            for (let i = 0; i < 5; i++)
                 this.spawnHealth();
 
             camera.rotateX(-20 * Math.PI / 180);
