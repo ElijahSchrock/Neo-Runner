@@ -277,7 +277,7 @@ export class Game {
         this.speedX = 0;
 
         document.addEventListener('keyup', function(event){
-            if (event.key === 'Enter' && this.running === false) {
+            if (event.key === 'Enter') {
                 event.preventDefault();
                 document.getElementById('start-button').onclick();
                 document.getElementById('replay-game-button').onclick();
