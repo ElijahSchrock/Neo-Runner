@@ -273,6 +273,7 @@ export class Game {
                 event.preventDefault();
                 document.getElementById('start-button').onclick();
                 document.getElementById('replay-game-button').onclick();
+                document.getElementById('end-pause-button').onclick();
             }
         })
 
