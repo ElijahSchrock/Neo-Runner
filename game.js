@@ -581,7 +581,7 @@ export class Game {
             for (let i = 0; i < 25; i++)
                 this.spawnBonus();
 
-            for (let i = 0; i < 5; i++)
+            for (let i = 0; i < 2; i++)
                 this.spawnHealth();
 
             camera.rotateX(-20 * Math.PI / 180);
