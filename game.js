@@ -403,7 +403,7 @@ export class Game {
 
         const highScoreString = localStorage.getItem(this.HIGH_SCORES);
         const highScores = JSON.parse(highScoreString) ?? []; // ?? nullish coalescing operator returns its right hand operand when left-hand side is null or undefined and otherwise returns left hand side operand.
-        const lowestScore = highScores[this.NO_OF_HIGH_SCORES - 1]?.this.score ?? 0;
+        const lowestScore = highScores[this.NO_OF_HIGH_SCORES]?.this.score ?? 0;
 
         if (this.score > lowestScore) {
             this.saveHighScore(score, highScores);
