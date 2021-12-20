@@ -8,7 +8,8 @@ export class Game {
     OBSTACLE_MATERIAL = new THREE.MeshBasicMaterial({color: 0xccdeee});
     BONUS_PREFAB = new THREE.SphereBufferGeometry(1, 12, 12);
     HEALTH_PREFAB = new THREE.SphereBufferGeometry(1, 12 ,12);
-    COLLISION_THRESHOLD = 0.7;
+    COLLISION_THRESHOLD = 0.6
+    ;
 
     constructor(scene, camera){
         this.running = false
