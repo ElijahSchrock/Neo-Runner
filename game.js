@@ -260,7 +260,7 @@ export class Game {
                 }
                  break;
             case 'ArrowDown':
-                if(this.running === false){
+                if(this.running === false && this.divPauseScreen.style.display === 'grid'){
                     this.running = true;
                     this.clock.start;
                     this.objectsParent.position.z
