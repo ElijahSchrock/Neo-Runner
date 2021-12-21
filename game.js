@@ -61,6 +61,9 @@ export class Game {
             this.divIntroScreen.style.display = 'grid';
             this.divInstructScreen.style.display = 'none';
         }
+        document.getElementsByClassName('mute-background-music').onclick = () => {
+            musicAudio.volume = 0
+        }
 
         this.scene = scene;
         this.camera = camera;
