@@ -103,7 +103,7 @@ export class Game {
             volume: 0.75
         });
         const musicId = this.musicAudio.play();
-            musicAudio.fade(0, 0.2, 5000, musicId)
+            this.musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
