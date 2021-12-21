@@ -62,10 +62,10 @@ export class Game {
             this.divInstructScreen.style.display = 'none';
         }
         document.getElementsByClassName('mute-background-music').onclick = () => {
-            this.muteAudio(0);
+            this.musicAudio.fade(.75, 0, 100, musicId);
         }
         document.getElementsByClassName('play-background-music').onclick = () => {
-            this.muteAudio(.75)
+            this.musicAudio.fade(0, 0.2, 5000, musicId);
         }
 
         this.scene = scene;
@@ -103,7 +103,8 @@ export class Game {
             volume: 0.75,
             id: 'background'
         });
-            this.musicAudio.fade(0, 0.2, 5000, 'background')
+        const musicId = this.musicAudio.play();
+            this.musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
