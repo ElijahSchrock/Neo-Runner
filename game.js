@@ -61,6 +61,13 @@ export class Game {
             this.divIntroScreen.style.display = 'grid';
             this.divInstructScreen.style.display = 'none';
         }
+        document.getElementsByClassName('mute-background-music').onclick = () => {
+            this.musicAudio.autoplay = false
+            this.musicAudio.stop();
+        }
+        document.getElementsByClassName('play-background-music').onclick = () => {
+            this.musicAudio.play();
+        }
 
         this.scene = scene;
         this.camera = camera;
@@ -90,6 +97,7 @@ export class Game {
 
     setupAudio() {
         //background audio
+        let id; 
         this.musicAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
