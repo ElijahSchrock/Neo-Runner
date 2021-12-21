@@ -61,12 +61,12 @@ export class Game {
             this.divIntroScreen.style.display = 'grid';
             this.divInstructScreen.style.display = 'none';
         }
-        document.getElementsByClassName('mute-background-music').onclick = () => {
-            this.musicAudio.fade(.75, 0, 100, musicId);
-        }
-        document.getElementsByClassName('play-background-music').onclick = () => {
-            this.musicAudio.fade(0, 0.2, 5000, musicId);
-        }
+        // document.getElementsByClassName('mute-background-music').onclick = () => {
+        //     this.musicAudio.fade(.75, 0, 100, musicId);
+        // }
+        // document.getElementsByClassName('play-background-music').onclick = () => {
+        //     this.musicAudio.fade(0, 0.2, 5000, musicId);
+        // }
 
         this.scene = scene;
         this.camera = camera;
@@ -121,9 +121,7 @@ export class Game {
             volume: .7
         });
     }
-    muteAudio(volume) {
-        this.musicAudio.volume(value);
-    }
+
     createGrid(scene) {
 
         let divisions = 30;
