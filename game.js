@@ -62,11 +62,10 @@ export class Game {
             this.divInstructScreen.style.display = 'none';
         }
         document.getElementsByClassName('mute-background-music').onclick = () => {
-            this.musicAudio.autoplay = false
-            this.musicAudio.stop();
+            this.muteAudio(0);
         }
         document.getElementsByClassName('play-background-music').onclick = () => {
-            this.musicAudio.play();
+            this.muteAudio(.75)
         }
 
         this.scene = scene;
@@ -97,7 +96,6 @@ export class Game {
 
     setupAudio() {
         //background audio
-        let id; 
         this.musicAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
@@ -121,6 +119,9 @@ export class Game {
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/health-bonus.wav'],
             volume: .7
         });
+    }
+    muteAudio(volume) {
+        this.musicAudio.volume(value);
     }
     createGrid(scene) {
 
