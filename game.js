@@ -62,7 +62,10 @@ export class Game {
             this.divInstructScreen.style.display = 'none';
         }
         document.getElementsByClassName('mute-background-music').onclick = () => {
-            musicAudio.volume = 0
+            musicAudio.stop();
+        }
+        document.getElementsByClassName('play-background-music').onclick = () => {
+            musicAudio.play();
         }
 
         this.scene = scene;

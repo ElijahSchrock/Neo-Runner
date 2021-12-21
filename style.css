@@ -136,7 +136,7 @@ input[type='range'] {
     margin-bottom: 1rem;
   }
 
-  #start-button, #replay-game-button, #end-pause-button, #instruct-button, #back-to-start-button, #new-player-button, .mute-background-music {
+  #start-button, #replay-game-button, #end-pause-button, #instruct-button, #back-to-start-button, #new-player-button, .mute-background-music, .play-background-music {
     background-color: black;
     border: 1px solid yellow;
     border-radius: 100%;
@@ -150,11 +150,11 @@ input[type='range'] {
       padding-top: 0.3rem;
   }
 
-  #start-button:hover, #replay-game-button:hover, #end-pause-button:hover, #instruct-button:hover, #back-to-start-button:hover, #new-player-button:hover, .mute-background-music:hover {
+  #start-button:hover, #replay-game-button:hover, #end-pause-button:hover, #instruct-button:hover, #back-to-start-button:hover, #new-player-button:hover, .mute-background-music:hover, .play-background-music:hover {
     background-color: #302b5e;
   }
 
-  #start-button:active, #replay-game-button:active, #end-pause-button:active, #instruct-button:active, #back-to-start-button:active, #new-player-button:active, .mute-background-music:active {
+  #start-button:active, #replay-game-button:active, #end-pause-button:active, #instruct-button:active, #back-to-start-button:active, #new-player-button:active, .mute-background-music:active, .play-background-music:active {
     background-color: #0f0a49;
   }
 
