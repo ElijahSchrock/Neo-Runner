@@ -61,12 +61,6 @@ export class Game {
             this.divIntroScreen.style.display = 'grid';
             this.divInstructScreen.style.display = 'none';
         }
-        document.getElementsByClassName('mute-background-music').onclick = () => {
-            mute(true, 'background');
-        }
-        document.getElementsByClassName('play-background-music').onclick = () => {
-            mute(false, 'background');
-        }
 
         this.scene = scene;
         this.camera = camera;
@@ -96,12 +90,28 @@ export class Game {
 
     setupAudio() {
         //background audio
+        let id; 
         this.musicAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
             loop: true,
             volume: 0.75,
-            id: 'background'
+        });
+        this.playbtn = document.getElementsByClassName('play-background-music');
+        this.muteBtn = document.getElementsByClassName('mute-background-music');
+
+        muteBtn.onclick = function() {
+            this.musicAudio.mute(true, id);
+        }
+        unmuteBtn.onclick = function() {
+            this.musicAudio.mute(false, id);
+        }
+
+        this.musicAudio.on('end', function(){
+            this.playBtn.disabled = false;
+        });
+        this.musicAudio.on('play', function(){ 
+            this.playBtn.disabled = true; 
         });
         const musicId = this.musicAudio.play();
             this.musicAudio.fade(0, 0.2, 5000, musicId)
