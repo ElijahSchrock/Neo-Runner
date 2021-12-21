@@ -91,7 +91,7 @@ export class Game {
     setupAudio() {
         //background audio
         const musicAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb'],
             autoplay: true,
             loop: true,
             volume: 0.75
@@ -100,17 +100,17 @@ export class Game {
             musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb'],
             volume: .4
         });
         //bonus audio
         this.bonusAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/bonus-7.wav'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb'],
             volume: 0.2
         });
         //health bonus audio
         this.healthBonusAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/health-bonus.wav'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb'],
             volume: .7
         });
     }
@@ -309,29 +309,30 @@ export class Game {
                         //health popup
                         this.createHealthPopup();
                         //play crash audio
-                        if (this.crashAudio)
+                        if (this.crashAudio) {
                             this.crashAudio.play();
+                        }
                         // reduce health if collision detected
                         this.health -= 10;
                         this.divHealth.value = this.health;
                         this.setupObstacle(...params); //... is spread operator to take the array of params on line 197
-                        if (this.health <= 0)
+                        if (this.health <= 0) {
+                            // this.server();
                             this.gameOver();
+                        }
                     } else if (child.userData.type === 'health'){
                         //health bonus audio
                         if (this.health < 50){
-                        //increases health
-                        if(this.health < 50){
+                            //increases health
                             this.newHealth = this.health += 10;
-                        }
-                        //health bonus popup
-                        this.createHealthBonusPopup();                            
+                            //health bonus popup
+                            this.createHealthBonusPopup();                            
                             if (this.healthBonusAudio) {
                                 this.healthBonusAudio.play();
                             }                        
-                        //increases healthbar
-                        this.divHealth.value = this.newHealth;
-                        child.userData.health = this.setupHealth(...params);                            
+                            //increases healthbar
+                            this.divHealth.value = this.newHealth;
+                            child.userData.health = this.setupHealth(...params);                            
                         }
                     }
                     else {
@@ -404,6 +405,44 @@ export class Game {
         //allows a 1 sec pause between game over and game over screen
         }, 1000)
     }
+
+    // server() {
+    //       console.log('server');
+    //     const player = document.querySelector('#name').value;
+    //     const data = {
+    //         player: player,
+    //         score: this.score,
+    //         distance: this.objectsParent.position.z.toFixed(0)
+    //     }
+
+    //     fetch('http://localhost:1337/leaderboard', {
+    //     method: 'post',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //     body: JSON.stringify(data)
+    //     }).then((response) => {
+    //         return response.json();
+    //     }).then((data) => {
+    //         this.getLeaderBoard();
+    //     }).catch((err) => {
+    //         console.error(err)
+    //     })
+    // }
+
+    // getLeaderBoard() {
+    //     fetch('http://localhost:1337/leaderboard')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             data.forEach((entry) => {
+    //                 const el = document.createElement('tr');
+    //                 el.innerHTML = `<td>${entry.player}</td> <td>${entry.score}</td> <td>${entry.distance}</td> <td>${entry.date}</td>`
+    //                 document.querySelector('#score-table tbody').appendChild(el);
+    //             })
+    //         }).catch((err) => {
+    //             console.error(err);
+    //         })
+    // }
 
     leaderBoard() {
         this.NO_OF_HIGH_SCORES = 10;
