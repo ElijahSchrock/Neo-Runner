@@ -62,7 +62,7 @@ export class Game {
             this.divInstructScreen.style.display = 'none';
         }
         document.getElementsByClassName('mute-background-music').onclick = () => {
-            this.musicAudio.stop();
+            this.musicAudio.mute('background');
         }
         document.getElementsByClassName('play-background-music').onclick = () => {
             this.musicAudio.play();
@@ -100,7 +100,8 @@ export class Game {
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
             loop: true,
-            volume: 0.75
+            volume: 0.75,
+            id: 'background'
         });
         const musicId = this.musicAudio.play();
             this.musicAudio.fade(0, 0.2, 5000, musicId)
