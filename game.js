@@ -101,9 +101,9 @@ export class Game {
             autoplay: true,
             loop: true,
             volume: 0.75,
+            id: 'background'
         });
-        const musicId = this.musicAudio.play();
-            this.musicAudio.fade(0, 0.2, 5000, musicId)
+            this.musicAudio.fade(0, 0.2, 5000, 'background')
         //crash audio
         this.crashAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
