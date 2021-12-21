@@ -100,7 +100,7 @@ export class Game {
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
             loop: true,
-            volume: 0.75,
+            volume: 0.5,
             id: 'background'
         });
         const musicId = this.musicAudio.play();
@@ -108,7 +108,7 @@ export class Game {
         //crash audio
         this.crashAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
-            volume: .4
+            volume: .3
         });
         //bonus audio
         this.bonusAudio = new Howl ({
@@ -118,7 +118,7 @@ export class Game {
         //health bonus audio
         this.healthBonusAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/health-bonus.wav'],
-            volume: .7
+            volume: .6
         });
     }
 
