@@ -91,7 +91,7 @@ export class Game {
     setupAudio() {
         //background audio
         const musicAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
             loop: true,
             volume: 0.75
@@ -100,17 +100,17 @@ export class Game {
             musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
             volume: .4
         });
         //bonus audio
         this.bonusAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/bonus-7.wav'],
             volume: 0.2
         });
         //health bonus audio
         this.healthBonusAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb'],
+            src: ['https://neorunner.s3.us-west-1.amazonaws.com/health-bonus.wav'],
             volume: .7
         });
     }
