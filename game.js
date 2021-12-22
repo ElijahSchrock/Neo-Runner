@@ -317,13 +317,6 @@ export class Game {
         this.speedX = 0
     }
 
-    touchHandler(event){
-        if(event.touches.length > 1){
-            //the event is multi-touch
-            //you can then prevent the behavior
-            event.preventDefault()
-        }
-    }
     createMobile() {     
         this.leftBtn = document.createElement('button');
         this.leftBtn.id = 'left-button';
@@ -340,11 +333,12 @@ export class Game {
         this.mobilePause.innerHTML = 'Pause'
         document.body.appendChild(this.mobilePause);
 
-        this.leftBtn.addEventListener("touchstart", this.touchHandler(), false);
-        this.leftBtn.addEventListener("touchstart", this.mobileLeft(), false);
-        this.rightBtn.addEventListener("touchstart", this.touchHandler(), false);
-        this.rightBtn.addEventListener("touchstart", this.mobileRight(), false);
-        
+        document.getElementById('left-button').ontouchstart = () => {
+            this.mobileLeft();
+        }
+        document.getElementById('right-button').ontouchstart = () => {
+            this.mobileRight();
+        }
         document.getElementById('left-button').ontouchend = () => {
             this.mobileIdle();
         }
