@@ -103,7 +103,7 @@ export class Game {
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
             loop: true,
-            volume: 0.015,
+            volume: 0.07,
             id: 'background'
         });
         // const musicId = this.musicAudio.play();
@@ -298,7 +298,7 @@ export class Game {
         })
 
     }
-
+ 
     mobileLeft() {
         this.mobileSpeedX;
         this.mobileSpeedX = -1
@@ -316,8 +316,8 @@ export class Game {
     mobileIdle() {
         this.speedX = 0
     }
-    
-    createMobile() {
+
+    createMobile() {     
         this.leftBtn = document.createElement('button');
         this.leftBtn.id = 'left-button';
         this.leftBtn.innerHTML = 'Left'
@@ -333,16 +333,16 @@ export class Game {
         this.mobilePause.innerHTML = 'Pause'
         document.body.appendChild(this.mobilePause);
 
-        document.getElementById('left-button').onmousedown = () => {
+        document.getElementById('left-button').ontouchstart = () => {
             this.mobileLeft();
         }
-        document.getElementById('right-button').onmousedown = () => {
+        document.getElementById('right-button').ontouchstart = () => {
             this.mobileRight();
         }
-        document.getElementById('left-button').onmouseup = () => {
+        document.getElementById('left-button').ontouchend = () => {
             this.mobileIdle();
         }
-        document.getElementById('right-button').onmouseup = () => {
+        document.getElementById('right-button').ontouchend = () => {
             this.mobileIdle();
         }
         document.getElementById('mobilePause-button').onclick = () => {
@@ -356,7 +356,6 @@ export class Game {
             }
         }
     }
-
     checkCollisions(){
         //this will be collision logic
         this.objectsParent.traverse((child) => {
