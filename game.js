@@ -562,7 +562,7 @@ export class Game {
                 this.neo.position.x = 0;
                 this.neo.position.y = 0;
                 this.neo.position.z = 0;
-                this.neo.children.forEach((child) => { child.material.metalness = 0 })
+                // this.neo.children.forEach((child) => { child.material.metalness = 0 })
 
                 this.mixer = new THREE.AnimationMixer( this.neo );
                 gltf.animations.forEach(( clip ) => {
