@@ -299,6 +299,24 @@ export class Game {
 
     }
 
+    mobileLeft() {
+        this.mobileSpeedX;
+        this.mobileSpeedX = -1
+        this.speedX = this.mobileSpeedX
+        console.log('left')
+    }
+
+    mobileRight() {
+        this.mobileSpeedX;
+        this.mobileSpeedX = 1
+        this.speedX = this.mobileSpeedX
+        console.log('right')
+    }
+
+    mobileIdle() {
+        this.speedX = 0
+    }
+    
     createMobile() {
         this.leftBtn = document.createElement('button');
         this.leftBtn.id = 'left-button';
@@ -337,23 +355,6 @@ export class Game {
                 this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
             }
         }
-    }
-    mobileLeft() {
-        this.mobileSpeedX;
-        this.mobileSpeedX = -1
-        this.speedX = this.mobileSpeedX
-        console.log('left')
-    }
-
-    mobileRight() {
-        this.mobileSpeedX;
-        this.mobileSpeedX = 1
-        this.speedX = this.mobileSpeedX
-        console.log('right')
-    }
-
-    mobileIdle() {
-        this.speedX = 0
     }
 
     checkCollisions(){
