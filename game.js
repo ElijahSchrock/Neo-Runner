@@ -34,6 +34,9 @@ export class Game {
         this.divInstructScreen = document.getElementById('instructions');
         this.divBackToPlay = document.getElementById('back-to-start-button');
 
+        this.divLeftBtn = document.getElementById('left-button');
+        // this.divRightBtn = document.getElementById('right-button');
+
         document.getElementById('start-button').onclick = () => {
             this.running = true;
             document.getElementById('intro-screen').style.display = 'none';
@@ -100,11 +103,11 @@ export class Game {
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
             autoplay: true,
             loop: true,
-            volume: 0.5,
+            volume: 0.015,
             id: 'background'
         });
-        const musicId = this.musicAudio.play();
-            this.musicAudio.fade(0, 0.2, 5000, musicId)
+        // const musicId = this.musicAudio.play();
+        //     this.musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
             src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
@@ -250,13 +253,13 @@ export class Game {
 
     keyDown(event) {
         //move object by checking key press
-        let newSpeedX;
+        this.newSpeedX;
         switch (event.key) {
             case 'ArrowLeft':
-                newSpeedX = -1
+                this.newSpeedX = -1
                 break;
             case 'ArrowRight':
-                newSpeedX = 1
+                this.newSpeedX = 1
                 break;
             case 'ArrowUp':
                 if(this.running === true){
@@ -278,7 +281,7 @@ export class Game {
             default:
                 return;
         }
-        this.speedX = newSpeedX;
+        this.speedX = this.newSpeedX;
     }
 
     keyUp() {
@@ -294,6 +297,63 @@ export class Game {
             }
         })
 
+    }
+
+    createMobile() {
+        this.leftBtn = document.createElement('button');
+        this.leftBtn.id = 'left-button';
+        this.leftBtn.innerHTML = 'Left'
+        document.body.appendChild(this.leftBtn);
+        
+        this.rightBtn = document.createElement('button');
+        this.rightBtn.id = 'right-button';
+        this.rightBtn.innerHTML = 'Right'
+        document.body.appendChild(this.rightBtn);    
+
+        this.mobilePause = document.createElement('button');
+        this.mobilePause.id = 'mobilePause-button';
+        this.mobilePause.innerHTML = 'Pause'
+        document.body.appendChild(this.mobilePause);
+
+        document.getElementById('left-button').onmousedown = () => {
+            this.mobileLeft();
+        }
+        document.getElementById('right-button').onmousedown = () => {
+            this.mobileRight();
+        }
+        document.getElementById('left-button').onmouseup = () => {
+            this.mobileIdle();
+        }
+        document.getElementById('right-button').onmouseup = () => {
+            this.mobileIdle();
+        }
+        document.getElementById('mobilePause-button').onclick = () => {
+            if(this.running === true){
+                this.running = false;
+                this.clock.running = false;
+                    //show Paused UI
+                this.divPauseScreen.style.display = 'grid';
+                this.divPauseScore.innerText = this.score;
+                this.divPauseDistance.innerText = this.objectsParent.position.z.toFixed(0);
+            }
+        }
+    }
+    mobileLeft() {
+        this.mobileSpeedX;
+        this.mobileSpeedX = -1
+        this.speedX = this.mobileSpeedX
+        console.log('left')
+    }
+
+    mobileRight() {
+        this.mobileSpeedX;
+        this.mobileSpeedX = 1
+        this.speedX = this.mobileSpeedX
+        console.log('right')
+    }
+
+    mobileIdle() {
+        this.speedX = 0
     }
 
     checkCollisions(){

@@ -2,6 +2,46 @@ body {
     margin: 0;
 }
 
+#left-button{
+  position: absolute;
+  bottom: 2%;
+  left: 10%;
+  height: 9%;
+  width: 18%;
+  border-radius: 50%;
+  background: #111111;
+  border-color: yellow;
+  color: yellow;
+  display: none;
+}
+
+#right-button {
+  position: absolute;
+  bottom: 2%;
+  right: 10%;
+  height: 9%;
+  width: 18%;
+  border-radius: 50%;
+  background: #111111;
+  border-color: yellow;
+  color: yellow;
+  display: none;
+}
+
+#mobilePause-button {
+  position: absolute;
+  bottom: 2%;
+  left: 41%;
+  right: 50%;
+  height: 7%;
+  width: 14%;
+  border-radius: 50%;
+  background: #111111;
+  border-color: yellow;
+  color: yellow;
+  display: none;
+}
+
 #UI {
     position: absolute;
     color: yellow;
@@ -308,3 +348,9 @@ thead tr {
   font-weight: bold;
   text-align: center;
 } */
+
+@media only screen and (max-width: 1024px) {
+  #left-button, #right-button, #mobilePause-button {
+    display: block;
+  }
+}

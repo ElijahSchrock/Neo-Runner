@@ -19,6 +19,7 @@ window.onload = () => {
   const gameInstance = new Game(scene, camera);
 
   gameInstance.setupAudio();
+  gameInstance.createMobile();
 
   window.addEventListener( 'resize', onWindowResize, false );
 
