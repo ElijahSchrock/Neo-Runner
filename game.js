@@ -335,15 +335,19 @@ export class Game {
 
         document.getElementById('left-button').ontouchstart = () => {
             this.mobileLeft();
+            preventDefault();
         }
         document.getElementById('right-button').ontouchstart = () => {
             this.mobileRight();
+            preventDefault();
         }
         document.getElementById('left-button').ontouchend = () => {
             this.mobileIdle();
+            preventDefault();
         }
         document.getElementById('right-button').ontouchend = () => {
             this.mobileIdle();
+            preventDefault();
         }
         document.getElementById('mobilePause-button').onclick = () => {
             if(this.running === true){
