@@ -333,21 +333,21 @@ export class Game {
         this.mobilePause.innerHTML = 'Pause'
         document.body.appendChild(this.mobilePause);
 
-        document.getElementById('left-button').ontouchstart = () => {
+        document.getElementById('left-button').ontouchstart = (event) => {
             this.mobileLeft();
-            preventDefault();
+            event.preventDefault();
         }
-        document.getElementById('right-button').ontouchstart = () => {
+        document.getElementById('right-button').ontouchstart = (event) => {
             this.mobileRight();
-            preventDefault();
+            event.preventDefault();
         }
-        document.getElementById('left-button').ontouchend = () => {
+        document.getElementById('left-button').ontouchend = (event) => {
             this.mobileIdle();
-            preventDefault();
+            event.preventDefault();
         }
-        document.getElementById('right-button').ontouchend = () => {
+        document.getElementById('right-button').ontouchend = (event) => {
             this.mobileIdle();
-            preventDefault();
+            event.preventDefault();
         }
         document.getElementById('mobilePause-button').onclick = () => {
             if(this.running === true){
