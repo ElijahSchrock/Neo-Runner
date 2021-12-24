@@ -567,26 +567,26 @@ export class Game {
                 this.neo.position.x = 0;
                 this.neo.position.y = 0;
                 this.neo.position.z = 0;
-                // const mesh = this.neo.children[0].children[1];
-                // mesh.material.metalness = 0;
-                // mesh.material.needsUpdate = true;
-                // mesh.material = new THREE.MeshStandardMaterial({
-                //     color: "#00ff00",
-                //     skinning: true,
-                //     transparent: true,
-                //     opacity: 0.5
-                // })
-                // const body = this.neo.children[0].children[2].children;
-                // body.forEach((part) => {
-                //     part.material.metalness = 0;
-                //     part.material.needsUpdate = true
-                //     part.material = new THREE.MeshStandardMaterial({
-                //         color: "#00ff00",
-                //         skinning: true,
-                //         transparent: true,
-                //         opacity: 0.5
-                //     })
-                // })
+                const mesh = this.neo.children[0].children[1];
+                mesh.material.metalness = 0;
+                mesh.material.needsUpdate = true;
+                // // mesh.material = new THREE.MeshStandardMaterial({
+                // //     color: "#00ff00",
+                // //     skinning: true,
+                // //     transparent: true,
+                // //     opacity: 0.5
+                // // })
+                const body = this.neo.children[0].children[2].children;
+                body.forEach((part) => {
+                    part.material.metalness = 0;
+                    part.material.needsUpdate = true
+                    // // part.material = new THREE.MeshStandardMaterial({
+                    // //     color: "#00ff00",
+                    // //     skinning: true,
+                    // //     transparent: true,
+                    // //     opacity: 0.5
+                    // // })
+                })
                 this.mixer = new THREE.AnimationMixer( this.neo );
                 gltf.animations.forEach(( clip ) => {
                     this.mixer.clipAction(gltf.animations[1]).play();
