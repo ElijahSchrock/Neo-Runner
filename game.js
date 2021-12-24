@@ -487,7 +487,7 @@ export class Game {
             distance: this.objectsParent.position.z.toFixed(0)
         }
 
-        fetch('https://neorunnerserver.herokuapp.com/leaderboard', {
+        fetch('https://neorunnerserver.herokuapp.com/leaderboard/', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
@@ -503,7 +503,7 @@ export class Game {
     }
 
     getLeaderBoard() {
-        fetch('https://neorunnerserver.herokuapp.com/leaderboard')
+        fetch('https://neorunnerserver.herokuapp.com/leaderboard/')
             .then(response => response.json())
             .then(data => {
                 data.forEach((entry) => {
