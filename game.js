@@ -389,7 +389,7 @@ export class Game {
                         this.divHealth.value = this.health;
                         this.setupObstacle(...params); //... is spread operator to take the array of params on line 197
                         if (this.health <= 0) {
-                            // this.server();
+                            this.server();
                             this.gameOver();
                         }
                     } else if (child.userData.type === 'health'){
@@ -469,7 +469,7 @@ export class Game {
         this.divGameOverScore.innerText = this.score;
         this.divGameOverDistance.innerText = this.objectsParent.position.z.toFixed(0);
 
-        this.leaderBoard(score);
+        // this.leaderBoard(score);
         setTimeout(() => {
             this.divGameOverScreen.style.display = 'grid';
             //reset variables
@@ -478,79 +478,79 @@ export class Game {
         }, 1000)
     }
 
-    // server() {
-    //       console.log('server');
-    //     const player = document.querySelector('#name').value;
-    //     const data = {
-    //         player: player,
-    //         score: this.score,
-    //         distance: this.objectsParent.position.z.toFixed(0)
-    //     }
-
-    //     fetch('https://neorunnerserver.herokuapp.com/leaderboard', {
-    //     method: 'post',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //     body: JSON.stringify(data)
-    //     }).then((response) => {
-    //         return response.json();
-    //     }).then((data) => {
-    //         this.getLeaderBoard();
-    //     }).catch((err) => {
-    //         console.error(err)
-    //     })
-    // }
-
-    // getLeaderBoard() {
-    //     fetch('https://neorunnerserver.herokuapp.com/leaderboard')
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             data.forEach((entry) => {
-    //                 const el = document.createElement('tr');
-    //                 el.innerHTML = `<td>${entry.player}</td> <td>${entry.score}</td> <td>${entry.distance}</td> <td>${entry.date}</td>`
-    //                 document.querySelector('#score-table tbody').appendChild(el);
-    //             })
-    //         }).catch((err) => {
-    //             console.error(err);
-    //         })
-    // }
-
-    leaderBoard() {
-        this.NO_OF_HIGH_SCORES = 10;
-        this.HIGH_SCORES = 'highScores';
-        this.USER_NAME = document.getElementById('name').value
-
-        const highScoreString = localStorage.getItem(this.HIGH_SCORES);
-        const highScores = JSON.parse(highScoreString) ?? []; // ?? nullish coalescing operator returns its right hand operand when left-hand side is null or undefined and otherwise returns left hand side operand.
-        const lowestScore = highScores[this.NO_OF_HIGH_SCORES]?.this.score ?? 0;
-
-        if (this.score > lowestScore) {
-            this.saveHighScore(score, highScores);
-            this.showHighScore();
+    server() {
+          console.log('server');
+        const player = document.querySelector('#name').value;
+        const data = {
+            player: player,
+            score: this.score,
+            distance: this.objectsParent.position.z.toFixed(0)
         }
+
+        fetch('https://neorunnerserver.herokuapp.com/leaderboard', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify(data)
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            this.getLeaderBoard();
+        }).catch((err) => {
+            console.error(err)
+        })
     }
 
-    saveHighScore(score, highScores) {
-        // const name = prompt('Neo has reached a highscore! Enter your name:');
-        const newScore = {score: this.score, distance: this.objectsParent.position.z.toFixed(0), name: this.USER_NAME};
-        //adds to the list
-        highScores.push(newScore);
-        //sorts list
-        highScores.sort((a, b) => b.score - a.score);
-        //select new list
-        highScores.splice(this.NO_OF_HIGH_SCORES);
-        //save to local storage
-        localStorage.setItem(this.HIGH_SCORES, JSON.stringify(highScores));
+    getLeaderBoard() {
+        fetch('https://neorunnerserver.herokuapp.com/leaderboard')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach((entry) => {
+                    const el = document.createElement('tr');
+                    el.innerHTML = `<td>${entry.player}</td> <td>${entry.score}</td> <td>${entry.distance}</td> <td>${entry.date}</td>`
+                    document.querySelector('#score-table tbody').appendChild(el);
+                })
+            }).catch((err) => {
+                console.error(err);
+            })
     }
 
-    showHighScore() {
-        const highScores = JSON.parse(localStorage.getItem(this.HIGH_SCORES)) ?? [];
-        const highScoreList = document.getElementById('highscore');
+    // leaderBoard() {
+    //     this.NO_OF_HIGH_SCORES = 10;
+    //     this.HIGH_SCORES = 'highScores';
+    //     this.USER_NAME = document.getElementById('name').value
 
-        highScoreList.innerHTML = highScores.map((score) =>
-          `<li> ${score.name} Scored ${score.score} Points & Traveled ${score.distance} Feet`).join('');
-    }
+    //     const highScoreString = localStorage.getItem(this.HIGH_SCORES);
+    //     const highScores = JSON.parse(highScoreString) ?? []; // ?? nullish coalescing operator returns its right hand operand when left-hand side is null or undefined and otherwise returns left hand side operand.
+    //     const lowestScore = highScores[this.NO_OF_HIGH_SCORES]?.this.score ?? 0;
+
+    //     if (this.score > lowestScore) {
+    //         this.saveHighScore(score, highScores);
+    //         this.showHighScore();
+    //     }
+    // }
+
+    // saveHighScore(score, highScores) {
+    //     // const name = prompt('Neo has reached a highscore! Enter your name:');
+    //     const newScore = {score: this.score, distance: this.objectsParent.position.z.toFixed(0), name: this.USER_NAME};
+    //     //adds to the list
+    //     highScores.push(newScore);
+    //     //sorts list
+    //     highScores.sort((a, b) => b.score - a.score);
+    //     //select new list
+    //     highScores.splice(this.NO_OF_HIGH_SCORES);
+    //     //save to local storage
+    //     localStorage.setItem(this.HIGH_SCORES, JSON.stringify(highScores));
+    // }
+
+    // showHighScore() {
+    //     const highScores = JSON.parse(localStorage.getItem(this.HIGH_SCORES)) ?? [];
+    //     const highScoreList = document.getElementById('highscore');
+
+    //     highScoreList.innerHTML = highScores.map((score) =>
+    //       `<li> ${score.name} Scored ${score.score} Points & Traveled ${score.distance} Feet`).join('');
+    // }
 
     createNeo(scene){
         const loadingManager = new THREE.LoadingManager(() => {
@@ -560,14 +560,33 @@ export class Game {
           });
         //use this fucntion to load in model of runner
         const loader = new GLTFLoader(loadingManager);
+
             loader.load('https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb', (gltf) => {
                 this.neo = gltf.scene;
                 this.neo.scale.set(0.04, 0.04, 0.04);
                 this.neo.position.x = 0;
                 this.neo.position.y = 0;
                 this.neo.position.z = 0;
-                // this.neo.children.forEach((child) => { child.material.metalness = 0 })
-
+                // const mesh = this.neo.children[0].children[1];
+                // mesh.material.metalness = 0;
+                // mesh.material.needsUpdate = true;
+                // mesh.material = new THREE.MeshStandardMaterial({
+                //     color: "#00ff00",
+                //     skinning: true,
+                //     transparent: true,
+                //     opacity: 0.5
+                // })
+                // const body = this.neo.children[0].children[2].children;
+                // body.forEach((part) => {
+                //     part.material.metalness = 0;
+                //     part.material.needsUpdate = true
+                //     part.material = new THREE.MeshStandardMaterial({
+                //         color: "#00ff00",
+                //         skinning: true,
+                //         transparent: true,
+                //         opacity: 0.5
+                //     })
+                // })
                 this.mixer = new THREE.AnimationMixer( this.neo );
                 gltf.animations.forEach(( clip ) => {
                     this.mixer.clipAction(gltf.animations[1]).play();
