@@ -6,10 +6,10 @@ window.onload = () => {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-  const renderer = new THREE.WebGL1Renderer();
-  // High-DPI phones otherwise render up to nine times as many pixels.
-  const pixelRatio = () => Math.min(window.devicePixelRatio || 1,
-    window.matchMedia('(pointer: coarse)').matches ? 1 : 2);
+  const renderer = new THREE.WebGL1Renderer({ antialias: true });
+  // Sharpen high-DPI screens while bounding framebuffer size on large displays.
+  const pixelRatio = () => Math.min(window.devicePixelRatio || 1, 2,
+    Math.sqrt(3_000_000 / (window.innerWidth * window.innerHeight)));
   renderer.setPixelRatio(pixelRatio());
   renderer.setSize(window.innerWidth, window.innerHeight);
 

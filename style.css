@@ -4,6 +4,8 @@ body {
     height: 100%;
     overflow: hidden;
     overscroll-behavior: none;
+    background-color: #000;
+    color-scheme: dark;
 }
 
 canvas {
@@ -12,6 +14,8 @@ canvas {
 
 body {
     margin: 0;
+    position: relative;
+    height: 100dvh;
     touch-action: none;
     -webkit-touch-callout:none;
     -webkit-user-select:none;
@@ -24,8 +28,8 @@ body {
 
 #left-button{
   position: absolute;
-  bottom: 2%;
-  left: 10%;
+  bottom: max(2%, env(safe-area-inset-bottom, 0px));
+  left: max(10%, env(safe-area-inset-left, 0px));
   height: 9%;
   width: 18%;
   border-radius: 50%;
@@ -44,8 +48,8 @@ body {
 
 #right-button {
   position: absolute;
-  bottom: 2%;
-  right: 10%;
+  bottom: max(2%, env(safe-area-inset-bottom, 0px));
+  right: max(10%, env(safe-area-inset-right, 0px));
   height: 9%;
   width: 18%;
   border-radius: 50%;
@@ -64,7 +68,7 @@ body {
 
 #mobilePause-button {
   position: absolute;
-  bottom: 2%;
+  bottom: max(2%, env(safe-area-inset-bottom, 0px));
   left: 41%;
   right: 50%;
   height: 7%;
@@ -79,8 +83,8 @@ body {
 #UI {
     position: absolute;
     color: yellow;
-    left: 0;
-    top: 0;
+    left: env(safe-area-inset-left, 0px);
+    top: env(safe-area-inset-top, 0px);
     border: 1px solid yellow;
     padding: 0.5rem;
     font-family: monospace;
@@ -407,4 +411,17 @@ thead tr {
 .leaderboard-table-container table {
   width: 100%;
   overflow-wrap: anywhere;
+}
+
+/* Let the background reach the edges, but keep menus clear of iPhone cutouts. */
+#intro-screen,
+#game-over-screen,
+#instructions,
+#leaderboard-screen,
+#pause-screen {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
 }

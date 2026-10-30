@@ -73,8 +73,8 @@ Leave the terminal running; press **Ctrl+C** to stop the server.
 If you use NVM, run `nvm install` and `nvm use` inside the project before
 installing dependencies. The included `.nvmrc` selects Node 24.
 
-> The game loads a texture-optimized character model for lower memory use on
-> phones. The original model is kept as source material.
+> The character model is approximately **94 MB**. Give the first load a moment,
+> especially on a slower connection.
 
 ### Useful commands
 
@@ -82,7 +82,6 @@ installing dependencies. The included `.nvmrc` selects Node 24.
 | --- | --- |
 | `npm start` | Run the game and leaderboard API locally, with live frontend updates |
 | `npm run dev` | Same as `npm start` |
-| `npm run optimize:model` | Regenerate the mobile-friendly character model from the original |
 | `npm test` | Check database persistence, ranking, API validation, and request limits |
 | `npm run build` | Generate the production frontend in `dist/` |
 | `npm run serve` | Serve the production frontend and API together |
@@ -165,7 +164,7 @@ VITE_ASSET_BASE_URL=https://your-space.your-region.cdn.digitaloceanspaces.com
 That directory must contain:
 
 ```text
-Neo-optimized.glb
+Neo.glb
 background-music.mp3
 obst-hit-option2.wav
 bonus-7.wav
@@ -175,14 +174,6 @@ health-bonus.wav
 Allow public reads and cross-origin requests from the game's origin. Variables
 prefixed with `VITE_` are bundled into browser code: use a **public URL**, never
 Spaces access keys or secrets.
-
-### Character model optimization
-
-The game loads `Neo-optimized.glb`. Regenerate it with `npm run optimize:model`
-after changing the original `public/assets/Neo.glb`. The script resizes textures
-to at most 1024×1024 while preserving the character geometry and animations.
-Commit the generated model so deployment does not need to regenerate it.
-If using Spaces, upload `Neo-optimized.glb` alongside the audio files.
 
 ### Database storage
 
