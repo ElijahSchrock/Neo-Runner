@@ -59,6 +59,18 @@ export class Game {
             this.divIntroScreen.style.display = 'none';
             this.divInstructScreen.style.display = 'grid';
         }
+        const leaderboardScreen = document.getElementById('leaderboard-screen');
+        document.getElementById('leaderboard-button').onclick = () => {
+            this.divIntroScreen.style.display = 'none';
+            leaderboardScreen.style.display = 'grid';
+            document.getElementById('leaderboard-back-button').focus();
+            this.getLeaderBoard(document.getElementById('home-leaderboard-status'));
+        };
+        document.getElementById('leaderboard-back-button').onclick = () => {
+            leaderboardScreen.style.display = 'none';
+            this.divIntroScreen.style.display = 'grid';
+            document.getElementById('leaderboard-button').focus();
+        };
         document.getElementById('back-to-start-button').onclick = () => {
             this.divInstructScreen.style.display = 'none';
             this.divIntroScreen.style.display = 'grid';
@@ -257,6 +269,13 @@ export class Game {
     }
 
     keyDown(event) {
+        // Keep arrow keys available for editing the player's name.
+        if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable]')) {
+            return;
+        }
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+            event.preventDefault();
+        }
         //move object by checking key press
         this.newSpeedX;
         switch (event.key) {
@@ -289,21 +308,16 @@ export class Game {
         this.speedX = this.newSpeedX;
     }
 
-    keyUp() {
-        //reset object to idle
+    keyUp(event) {
+        // Reset steering without adding more keyboard listeners on each release.
         this.speedX = 0;
-
-        document.addEventListener('keyup', function(event){
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                document.getElementById('start-button').onclick();
-                document.getElementById('replay-game-button').onclick();
-                document.getElementById('end-pause-button').onclick();
-            }
-        })
-
+        if (event.key === 'Enter' && event.target.id === 'name'
+            && this.divIntroScreen.style.display !== 'none') {
+            event.preventDefault();
+            document.getElementById('start-button').click();
+        }
     }
- 
+
     mobileLeft() {
         this.mobileSpeedX;
         this.mobileSpeedX = -1
@@ -509,27 +523,32 @@ export class Game {
         }
     }
 
-    async getLeaderBoard() {
+    async getLeaderBoard(status = null) {
+        if (status) status.textContent = 'Loading scores…';
         try {
             const response = await fetch('/api/leaderboard', { signal: AbortSignal.timeout(10000) });
             if (!response.ok) throw new Error('Leaderboard unavailable.');
-            this.renderLeaderBoard(await response.json());
+            const scores = await response.json();
+            this.renderLeaderBoard(scores);
+            if (status) status.textContent = scores.length ? '' : 'No scores yet. Play a round to set the first score!';
         } catch (error) {
             console.warn('Could not load leaderboard.', error);
+            if (status) status.textContent = 'Could not load scores. Go back and try again.';
         }
     }
 
     renderLeaderBoard(scores) {
-        const body = document.querySelector('#score-table tbody');
-        body.replaceChildren();
-        scores.forEach((entry) => {
-            const row = document.createElement('tr');
-            ['player', 'score', 'distance', 'date'].forEach((key) => {
-                const cell = document.createElement('td');
-                cell.textContent = key === 'date' ? new Date(entry.date).toLocaleDateString() : entry[key];
-                row.appendChild(cell);
+        document.querySelectorAll('[data-leaderboard-body]').forEach((body) => {
+            body.replaceChildren();
+            scores.forEach((entry) => {
+                const row = document.createElement('tr');
+                ['player', 'score', 'distance', 'date'].forEach((key) => {
+                    const cell = document.createElement('td');
+                    cell.textContent = key === 'date' ? new Date(entry.date).toLocaleDateString() : entry[key];
+                    row.appendChild(cell);
+                });
+                body.appendChild(row);
             });
-            body.appendChild(row);
         });
     }
 

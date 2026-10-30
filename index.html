@@ -32,8 +32,24 @@
         <br>
         <button id="start-button">Start</button>
         <button id="instruct-button">How to Play</button>
+        <button id="leaderboard-button">Leaderboard</button>
         <!-- <button class="mute-background-music">Mute Music</button>
         <button class="play-background-music">Play Music</button> -->
+      </div>
+    </div>
+    <div id="leaderboard-screen" role="region" aria-labelledby="leaderboard-title">
+      <div id="leaderboard-column">
+        <h1 id="leaderboard-title">Global Leaderboard</h1>
+        <p id="home-leaderboard-status" role="status" aria-live="polite"></p>
+        <div class="leaderboard-table-container">
+          <table aria-label="Top 10 runs">
+            <thead>
+              <tr><th>Player</th><th>Score</th><th>Distance</th><th>Date</th></tr>
+            </thead>
+            <tbody data-leaderboard-body></tbody>
+          </table>
+        </div>
+        <button id="leaderboard-back-button">Back</button>
       </div>
     </div>
     <div id="game-over-screen">
@@ -68,7 +84,7 @@
                   </th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody data-leaderboard-body></tbody>
             </table>
             <!-- <ul id="highscore-list"></ul> -->
           </div>

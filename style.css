@@ -1,3 +1,15 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+canvas {
+    display: block;
+}
+
 body {
     margin: 0;
     touch-action: none;
@@ -148,7 +160,7 @@ input[type='range'] {
     margin-top: 1rem;
   }
 
-  #intro-screen, #game-over-screen, #instructions{
+  #intro-screen, #game-over-screen, #instructions, #leaderboard-screen {
     position: absolute;
     top: 0;
     left: 0;
@@ -176,7 +188,7 @@ input[type='range'] {
     z-index: 10;
   }
 
-  #game-over-screen, #pause-screen, #instructions {
+  #game-over-screen, #pause-screen, #instructions, #leaderboard-screen {
     display: none;
 }
 
@@ -198,7 +210,7 @@ input[type='range'] {
     margin-bottom: 1rem;
   }
 
-  #start-button, #replay-game-button, #end-pause-button, #instruct-button, #back-to-start-button, #new-player-button, .mute-background-music, .play-background-music {
+  #leaderboard-button, #leaderboard-back-button, #start-button, #replay-game-button, #end-pause-button, #instruct-button, #back-to-start-button, #new-player-button, .mute-background-music, .play-background-music {
     background-color: black;
     border: 1px solid yellow;
     border-radius: 100%;
@@ -212,11 +224,11 @@ input[type='range'] {
       padding-top: 0.3rem;
   }
 
-  #start-button:hover, #replay-game-button:hover, #end-pause-button:hover, #instruct-button:hover, #back-to-start-button:hover, #new-player-button:hover, .mute-background-music:hover, .play-background-music:hover {
+  #leaderboard-button:hover, #leaderboard-back-button:hover, #start-button:hover, #replay-game-button:hover, #end-pause-button:hover, #instruct-button:hover, #back-to-start-button:hover, #new-player-button:hover, .mute-background-music:hover, .play-background-music:hover {
     background-color: #302b5e;
   }
 
-  #start-button:active, #replay-game-button:active, #end-pause-button:active, #instruct-button:active, #back-to-start-button:active, #new-player-button:active, .mute-background-music:active, .play-background-music:active {
+  #leaderboard-button:active, #leaderboard-back-button:active, #start-button:active, #replay-game-button:active, #end-pause-button:active, #instruct-button:active, #back-to-start-button:active, #new-player-button:active, .mute-background-music:active, .play-background-music:active {
     background-color: #0f0a49;
   }
 
@@ -375,4 +387,24 @@ thead tr {
   #left-button, #right-button, #mobilePause-button {
     display: block;
   }
+}
+
+#leaderboard-column {
+  box-sizing: border-box;
+  width: min(100%, 48rem);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.leaderboard-table-container {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.leaderboard-table-container table {
+  width: 100%;
+  overflow-wrap: anywhere;
 }
