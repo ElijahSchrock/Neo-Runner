@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import {Howl, Howler} from 'howler';
+import {Howl} from 'howler';
+
+// Use bundled assets locally; optionally point to a public Spaces/CDN URL.
+const assetBaseUrl = (import.meta.env.VITE_ASSET_BASE_URL || `${import.meta.env.BASE_URL}assets`).replace(/\/$/, '');
+const assetUrl = (filename) => `${assetBaseUrl}/${filename}`;
 
 export class Game {
 
@@ -74,6 +78,7 @@ export class Game {
         this.scene = scene;
         this.camera = camera;
         this.reset(false);
+        this.getLeaderBoard();
 
         //bind event calls
         document.addEventListener('keydown', this.keyDown.bind(this));
@@ -100,7 +105,7 @@ export class Game {
     setupAudio() {
         //background audio
         this.musicAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/background-music.mp3'],
+            src: [assetUrl('background-music.mp3')],
             autoplay: true,
             loop: true,
             volume: 0.07,
@@ -110,17 +115,17 @@ export class Game {
         //     this.musicAudio.fade(0, 0.2, 5000, musicId)
         //crash audio
         this.crashAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/obst-hit-option2.wav'],
+            src: [assetUrl('obst-hit-option2.wav')],
             volume: .3
         });
         //bonus audio
         this.bonusAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/bonus-7.wav'],
+            src: [assetUrl('bonus-7.wav')],
             volume: 0.2
         });
         //health bonus audio
         this.healthBonusAudio = new Howl ({
-            src: ['https://neorunner.s3.us-west-1.amazonaws.com/health-bonus.wav'],
+            src: [assetUrl('health-bonus.wav')],
             volume: .6
         });
     }
@@ -478,90 +483,66 @@ export class Game {
         }, 1000)
     }
 
-    server() {
-          console.log('server');
-        const player = document.querySelector('#name').value;
-        const data = {
-            player: player,
+    async server() {
+        const status = document.getElementById('leaderboard-status');
+        const entry = {
+            player: document.querySelector('#name').value.trim() || 'Player',
             score: this.score,
-            distance: this.objectsParent.position.z.toFixed(0)
+            distance: Math.round(this.objectsParent.position.z)
+        };
+        status.textContent = 'Saving score…';
+        try {
+            const response = await fetch('/api/leaderboard', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(entry),
+                signal: AbortSignal.timeout(10000)
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'Could not save your score.');
+            this.renderLeaderBoard(result);
+            status.textContent = 'Score saved.';
+        } catch (error) {
+            console.warn('Could not save score.', error);
+            status.textContent = 'Your score could not be saved. Please check your connection.';
+            await this.getLeaderBoard();
         }
-
-        fetch('https://neorunnerserver.herokuapp.com/leaderboard', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-          },
-        body: JSON.stringify(data)
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            this.getLeaderBoard();
-        }).catch((err) => {
-            console.error(err)
-        })
     }
 
-    getLeaderBoard() {
-        fetch('https://neorunnerserver.herokuapp.com/leaderboard')
-            .then(response => response.json())
-            .then(data => {
-                data.forEach((entry) => {
-                    const el = document.createElement('tr');
-                    el.innerHTML = `<td>${entry.player}</td> <td>${entry.score}</td> <td>${entry.distance}</td> <td>${entry.date}</td>`
-                    document.querySelector('#score-table tbody').appendChild(el);
-                })
-            }).catch((err) => {
-                console.error(err);
-            })
+    async getLeaderBoard() {
+        try {
+            const response = await fetch('/api/leaderboard', { signal: AbortSignal.timeout(10000) });
+            if (!response.ok) throw new Error('Leaderboard unavailable.');
+            this.renderLeaderBoard(await response.json());
+        } catch (error) {
+            console.warn('Could not load leaderboard.', error);
+        }
     }
 
-    // leaderBoard() {
-    //     this.NO_OF_HIGH_SCORES = 10;
-    //     this.HIGH_SCORES = 'highScores';
-    //     this.USER_NAME = document.getElementById('name').value
-
-    //     const highScoreString = localStorage.getItem(this.HIGH_SCORES);
-    //     const highScores = JSON.parse(highScoreString) ?? []; // ?? nullish coalescing operator returns its right hand operand when left-hand side is null or undefined and otherwise returns left hand side operand.
-    //     const lowestScore = highScores[this.NO_OF_HIGH_SCORES]?.this.score ?? 0;
-
-    //     if (this.score > lowestScore) {
-    //         this.saveHighScore(score, highScores);
-    //         this.showHighScore();
-    //     }
-    // }
-
-    // saveHighScore(score, highScores) {
-    //     // const name = prompt('Neo has reached a highscore! Enter your name:');
-    //     const newScore = {score: this.score, distance: this.objectsParent.position.z.toFixed(0), name: this.USER_NAME};
-    //     //adds to the list
-    //     highScores.push(newScore);
-    //     //sorts list
-    //     highScores.sort((a, b) => b.score - a.score);
-    //     //select new list
-    //     highScores.splice(this.NO_OF_HIGH_SCORES);
-    //     //save to local storage
-    //     localStorage.setItem(this.HIGH_SCORES, JSON.stringify(highScores));
-    // }
-
-    // showHighScore() {
-    //     const highScores = JSON.parse(localStorage.getItem(this.HIGH_SCORES)) ?? [];
-    //     const highScoreList = document.getElementById('highscore');
-
-    //     highScoreList.innerHTML = highScores.map((score) =>
-    //       `<li> ${score.name} Scored ${score.score} Points & Traveled ${score.distance} Feet`).join('');
-    // }
+    renderLeaderBoard(scores) {
+        const body = document.querySelector('#score-table tbody');
+        body.replaceChildren();
+        scores.forEach((entry) => {
+            const row = document.createElement('tr');
+            ['player', 'score', 'distance', 'date'].forEach((key) => {
+                const cell = document.createElement('td');
+                cell.textContent = key === 'date' ? new Date(entry.date).toLocaleDateString() : entry[key];
+                row.appendChild(cell);
+            });
+            body.appendChild(row);
+        });
+    }
 
     createNeo(scene){
         const loadingManager = new THREE.LoadingManager(() => {
 
             const loadingScreen = document.getElementById('loading-screen');
-            loadingScreen.classList.add('fade-out');
+            if (this.neo) loadingScreen.classList.add('fade-out');
           });
         //use this fucntion to load in model of runner
         const loader = new GLTFLoader(loadingManager);
 
-            loader.load('https://neorunner.s3.us-west-1.amazonaws.com/Neo.glb', (gltf) => {
+            loader.load(assetUrl('Neo.glb'), (gltf) => {
                 this.neo = gltf.scene;
                 this.neo.scale.set(0.04, 0.04, 0.04);
                 this.neo.position.x = 0;
@@ -599,7 +580,8 @@ export class Game {
                     console.log( Math.round(percentComplete, 2) + '% downloaded')
                 }
             }, function(error){
-                console.log('An error occurred')
+                console.error('Could not load Neo.', error);
+                document.getElementById('loading-title').textContent = 'Could not load Neo. Check the asset URL and refresh to retry.';
             })
     }
 

@@ -28,7 +28,7 @@
       </div>
       <div id="intro-column">
         <div id="intro-title">Welcome To Neo Runner</div>
-        <input type="text" id="name" placeholder="Who's Controlling Neo?" required>
+        <input type="text" id="name" maxlength="40" placeholder="Who's Controlling Neo?" required>
         <br>
         <button id="start-button">Start</button>
         <button id="instruct-button">How to Play</button>
@@ -49,6 +49,7 @@
         </div>
         <div id="highscore-column">
           <div id="highscore-title">Global Leaderboard</div>
+          <div id="leaderboard-status" role="status" aria-live="polite"></div>
           <div id="highscore">
             <table id="score-table">
               <thead>
@@ -99,7 +100,6 @@
         <button id="back-to-start-button">Back</button>
       </div>
     </div>
-    <script type="module" src="./game.js"></script>
     <script type="module" src="./main.js"></script>
   </body>
 </html>
