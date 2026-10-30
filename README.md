@@ -127,10 +127,19 @@ Neo-Runner/
 
 Names can contain up to 40 characters. Scores and distances must be nonnegative
 integers, up to one billion. The server generates timestamps and limits score
-submissions to 20 per minute per client IP. Names are rendered as text.
+submissions to 20 per minute per client IP, with an overall API limit of 120
+requests per minute per IP. Cross-origin browser submissions and compressed
+request bodies are rejected. Names are rendered as text.
 
 This is a casual leaderboard: runs are submitted by the browser, and names are
 not authenticated. Scores are shared, but they are not proof of a verified run.
+Command-line clients can still submit fabricated scores. Rate limits are held
+in memory and reset when the process restarts; they are not DDoS protection.
+Only the best **1,000 runs** are retained; the top **10** are displayed. After
+each submission, lower-ranked runs beyond the cap are deleted in the same
+transaction. Rankings use score, then distance, then earlier submission order.
+On startup, older databases are trimmed to the same cap and compacted if any
+rows were removed. This permanently deletes runs outside the retained pool.
 
 ## Configuration
 
@@ -177,7 +186,8 @@ Spaces access keys or secrets.
 
 ### Database storage
 
-The database and schema are created on first start. There is no separate SQL
+The database and schema are created on first start. Deleted score pages are
+reused by SQLite, keeping routine storage bounded around the 1,000-run pool. There is no separate SQL
 service to install. Database files, environment files, and generated builds are
 excluded from git.
 

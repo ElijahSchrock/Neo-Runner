@@ -216,3 +216,12 @@ setup targets a casual game on one server; multiple app servers would call for
 a shared database such as PostgreSQL.
 
 </details>
+
+
+## Score retention
+
+The API retains the best 1,000 runs and displays the top 10. Every submission
+prunes lower-ranked runs beyond that limit in one database transaction. On the
+first restart after deploying this policy, any larger existing database is
+trimmed and compacted. Back up the database before restarting if you want to
+preserve the full historical set; deleted runs cannot be recovered from the app.
