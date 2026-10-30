@@ -10,9 +10,12 @@
     "build": "vite build",
     "preview": "vite preview",
     "serve": "node --env-file-if-exists=.env.local server.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "optimize:model": "node scripts/optimize-model.mjs"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "sharp": "^0.35.5",
     "vite": "^8.3.5"
   },
   "dependencies": {

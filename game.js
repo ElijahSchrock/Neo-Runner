@@ -561,7 +561,7 @@ export class Game {
         //use this fucntion to load in model of runner
         const loader = new GLTFLoader(loadingManager);
 
-            loader.load(assetUrl('Neo.glb'), (gltf) => {
+            loader.load(assetUrl('Neo-optimized.glb'), (gltf) => {
                 this.neo = gltf.scene;
                 this.neo.scale.set(0.04, 0.04, 0.04);
                 this.neo.position.x = 0;
@@ -588,9 +588,9 @@ export class Game {
                 //     })
                 // })
                 this.mixer = new THREE.AnimationMixer( this.neo );
-                gltf.animations.forEach(( clip ) => {
-                    this.mixer.clipAction(gltf.animations[1]).play();
-                })
+                const running = gltf.animations.find((clip) => clip.name.toLowerCase() === 'running')
+                    || gltf.animations[1] || gltf.animations[0];
+                if (running) this.mixer.clipAction(running).play();
                 this.scene.add(this.neo);
 
             }, function(xhr){ //function to give model loading progress

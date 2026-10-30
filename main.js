@@ -7,8 +7,11 @@ window.onload = () => {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
   const renderer = new THREE.WebGL1Renderer();
+  // High-DPI phones otherwise render up to nine times as many pixels.
+  const pixelRatio = () => Math.min(window.devicePixelRatio || 1,
+    window.matchMedia('(pointer: coarse)').matches ? 1 : 2);
+  renderer.setPixelRatio(pixelRatio());
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
 
   document.body.appendChild(renderer.domElement);
 
@@ -28,6 +31,7 @@ window.onload = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
+    renderer.setPixelRatio(pixelRatio());
     renderer.setSize( window.innerWidth, window.innerHeight );
 }
 

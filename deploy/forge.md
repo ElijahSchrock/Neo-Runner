@@ -192,7 +192,7 @@ check the Forge daemon log and Node binary version.
 
 ## Assets and backups
 
-Local assets deploy with `dist/`. To switch to Spaces, set
+Local assets, including `Neo-optimized.glb`, deploy with `dist/`. To switch to Spaces, set
 `VITE_ASSET_BASE_URL` in the build environment or the checkout's `.env.local`,
 then rebuild. This is a public URL, never an access key. Spaces must allow
 public reads and CORS for `https://neorunner.elijahschrock.com`.
